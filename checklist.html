@@ -19,7 +19,7 @@
 
         /* Header */
         header { background: var(--s1); border-bottom: 1px solid var(--bd); padding: 0.75rem 1rem; position: sticky; top: 0; z-index: 100; }
-        .header-content { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+        .header-content { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
         .back-btn { background: var(--s3); border: 1px solid var(--bd); color: var(--w); padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 0.3rem; }
         .project-title { font-family: 'Josefin Sans', sans-serif; font-weight: 600; font-size: 1rem; flex: 1; }
         .save-status { display: flex; align-items: center; gap: 0.4rem; font-size: 0.7rem; color: var(--wd); }
@@ -28,11 +28,20 @@
         .save-dot.pending { background: var(--cu); animation: pulse 1s infinite; }
         @keyframes pulse { 50% { opacity: 0.5; } }
 
-        /* Nav Tabs */
-        .nav-tabs { background: var(--s2); border-bottom: 1px solid var(--bd); overflow-x: auto; position: sticky; top: 52px; z-index: 99; }
-        .nav-tabs-inner { display: flex; min-width: max-content; }
-        .nav-tab { padding: 0.75rem 1.25rem; font-size: 0.75rem; font-family: 'Syne Mono', monospace; color: var(--wd); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; }
-        .nav-tab.active { color: var(--cu); border-bottom-color: var(--cu); background: var(--cu3); }
+        /* Activity Navigator */
+        .activity-nav { background: var(--s2); border-bottom: 1px solid var(--bd); padding: 0.75rem 1rem; position: sticky; top: 52px; z-index: 99; overflow-x: auto; }
+        .activity-nav-title { font-size: 0.65rem; color: var(--wd); text-transform: uppercase; font-family: 'Syne Mono', monospace; margin-bottom: 0.5rem; }
+        .activity-nav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(45px, 1fr)); gap: 0.4rem; min-width: max-content; }
+        .activity-nav-btn { background: var(--s3); border: 1px solid var(--bd); color: var(--wd); padding: 0.4rem 0.6rem; border-radius: 4px; font-size: 0.65rem; font-family: 'Syne Mono', monospace; cursor: pointer; text-align: center; transition: all 0.2s; }
+        .activity-nav-btn:hover { border-color: var(--cu); color: var(--cu); }
+        .activity-nav-btn.active { background: var(--cu); border-color: var(--cu); color: var(--w); }
+        .activity-nav-btn.completed { background: var(--cu3); border-color: var(--cu); color: var(--cu); }
+
+        /* Block Tabs */
+        .block-tabs { background: var(--s1); border-bottom: 1px solid var(--bd); padding: 0.5rem 1rem; position: sticky; top: 110px; z-index: 98; overflow-x: auto; }
+        .block-tabs-inner { display: flex; gap: 0.5rem; min-width: max-content; }
+        .block-tab { padding: 0.5rem 1rem; font-size: 0.7rem; font-family: 'Syne Mono', monospace; color: var(--wd); cursor: pointer; border-radius: 4px; background: var(--s3); border: 1px solid var(--bd); transition: all 0.2s; }
+        .block-tab.active { background: var(--cu); border-color: var(--cu); color: var(--w); }
 
         /* Main */
         main { padding: 1rem; max-width: 900px; margin: 0 auto; }
@@ -46,7 +55,7 @@
         .info-value { font-size: 0.85rem; color: var(--w); }
 
         /* Bloque */
-        .bloque { background: var(--s2); border: 1px solid var(--bd); border-radius: 10px; padding: 1rem; margin-bottom: 1rem; }
+        .bloque { background: var(--s2); border: 1px solid var(--bd); border-radius: 10px; padding: 1rem; margin-bottom: 1rem; scroll-margin-top: 170px; }
         .bloque-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--bd); }
         .bloque-title { font-family: 'Josefin Sans', sans-serif; font-weight: 600; font-size: 1.1rem; }
         .bloque-progress { display: flex; align-items: center; gap: 0.5rem; font-size: 0.7rem; color: var(--wd); }
@@ -54,7 +63,7 @@
         .progress-fill { height: 100%; background: var(--cu); transition: width 0.3s; }
 
         /* Actividad */
-        .actividad { background: var(--s1); border: 1px solid var(--bd); border-radius: 8px; padding: 0.875rem; margin-bottom: 0.75rem; }
+        .actividad { background: var(--s1); border: 1px solid var(--bd); border-radius: 8px; padding: 0.875rem; margin-bottom: 0.75rem; scroll-margin-top: 170px; }
         .actividad-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
         .actividad-title { font-family: 'Josefin Sans', sans-serif; font-weight: 600; font-size: 0.95rem; }
         .actividad-num { font-size: 0.65rem; color: var(--cu); background: var(--cu3); padding: 0.2rem 0.5rem; border-radius: 4px; font-family: 'Syne Mono', monospace; }
@@ -79,12 +88,12 @@
         .holds-section { background: var(--s3); border-radius: 6px; padding: 0.75rem; margin-top: 0.75rem; }
         .holds-title { font-size: 0.65rem; color: var(--cu); text-transform: uppercase; font-family: 'Syne Mono', monospace; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.3rem; }
         .holds-title::before { content: '🔒'; }
-        .holds-table { width: 100%; border-collapse: collapse; font-size: 0.7rem; }
-        .holds-table th { text-align: left; padding: 0.4rem 0.3rem; font-size: 0.55rem; color: var(--wd); text-transform: uppercase; border-bottom: 1px solid var(--bd); }
-        .holds-table td { padding: 0.4rem 0.3rem; border-bottom: 1px solid var(--s4); }
+        .holds-table { width: 100%; border-collapse: collapse; font-size: 0.65rem; min-width: 500px; }
+        .holds-table th { text-align: left; padding: 0.5rem 0.4rem; font-size: 0.55rem; color: var(--wd); text-transform: uppercase; border-bottom: 1px solid var(--bd); }
+        .holds-table td { padding: 0.5rem 0.4rem; border-bottom: 1px solid var(--s4); vertical-align: middle; }
         .holds-table tr:last-child td { border-bottom: none; }
-        .hold-code { color: var(--cu); font-weight: 700; width: 40px; }
-        .firma-input { width: 100%; background: var(--s2); border: none; border-bottom: 1px solid var(--bd2); padding: 0.3rem 0.2rem; color: var(--w); font-size: 0.7rem; }
+        .hold-code { color: var(--cu); font-weight: 700; width: 45px; }
+        .firma-input { width: 100%; background: var(--s2); border: none; border-bottom: 1px solid var(--bd2); padding: 0.4rem 0.5rem; color: var(--w); font-size: 0.7rem; }
         .firma-input:focus { outline: none; border-bottom-color: var(--cu); }
 
         /* Floating Action Bar */
@@ -111,6 +120,7 @@
             .checklist-table { font-size: 0.75rem; }
             .item-text { font-size: 0.75rem; }
             .item-criteria { font-size: 0.65rem; }
+            .activity-nav-grid { grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); }
         }
     </style>
 </head>
@@ -127,13 +137,19 @@
         </div>
     </header>
 
-    <!-- Nav Tabs -->
-    <div class="nav-tabs">
-        <div class="nav-tabs-inner">
-            <div class="nav-tab active" onclick="scrollToBloque(1)">Bloque 1</div>
-            <div class="nav-tab" onclick="scrollToBloque(2)">Bloque 2</div>
-            <div class="nav-tab" onclick="scrollToBloque(3)">Bloque 3</div>
-            <div class="nav-tab" onclick="scrollToBloque(4)">Bloque 4</div>
+    <!-- Activity Navigator -->
+    <div class="activity-nav">
+        <div class="activity-nav-title">📍 Saltar a actividad</div>
+        <div class="activity-nav-grid" id="activity-nav"></div>
+    </div>
+
+    <!-- Block Tabs -->
+    <div class="block-tabs">
+        <div class="block-tabs-inner">
+            <div class="block-tab active" onclick="scrollToBloque(1)">Bloque 1</div>
+            <div class="block-tab" onclick="scrollToBloque(2)">Bloque 2</div>
+            <div class="block-tab" onclick="scrollToBloque(3)">Bloque 3</div>
+            <div class="block-tab" onclick="scrollToBloque(4)">Bloque 4</div>
         </div>
     </div>
 
@@ -177,9 +193,32 @@
         // State
         let projectId = null;
         let projectData = {};
-        let checklistData = { checks: {}, obs: {}, firmas: {} };
+        let checklistData = { checks: {}, obs: {}, firmas: {}, proyecto: {} };
         let isModified = false;
         let saveTimeout = null;
+
+        // Activity definitions
+        const ACTIVIDADES = [
+            { num: 1, nombre: 'REDES ELÉCTRICAS', bloque: 1 },
+            { num: 2, nombre: 'DEMOLICIONES Y RETIROS', bloque: 1 },
+            { num: 3, nombre: 'PLOMERÍA', bloque: 1 },
+            { num: 4, nombre: 'MAMPOSTERÍA', bloque: 1 },
+            { num: 5, nombre: 'REVOQUES (PAÑETES)', bloque: 1 },
+            { num: 6, nombre: 'ESTUCOS', bloque: 2 },
+            { num: 7, nombre: 'CIELOS RASOS (RAS)', bloque: 2 },
+            { num: 8, nombre: 'MORTERO DE NIVELACIÓN', bloque: 2 },
+            { num: 9, nombre: 'CIELO RASO EN DRYWALL', bloque: 2 },
+            { num: 10, nombre: 'PINTURA PRIMERA MANO', bloque: 2 },
+            { num: 11, nombre: 'ENCHAPE', bloque: 3 },
+            { num: 12, nombre: 'PINTURA SEGUNDA MANO', bloque: 3 },
+            { num: 13, nombre: 'CARPINTERÍAS', bloque: 3 },
+            { num: 14, nombre: 'INSTALACIÓN DE MESONES', bloque: 3 },
+            { num: 15, nombre: 'TERCERA MANO DE PINTURA', bloque: 3 },
+            { num: 16, nombre: 'BUITRÓN', bloque: 4 },
+            { num: 17, nombre: 'APARATOS Y ACCESORIOS', bloque: 4 },
+            { num: 18, nombre: 'DETALLADO DE NOVEDADES', bloque: 4 },
+            { num: 19, nombre: 'ASEO GENERAL', bloque: 4 }
+        ];
 
         // Get project ID from URL
         const urlParams = new URLSearchParams(window.location.search);
@@ -215,11 +254,21 @@
                 }
 
                 renderChecklist();
+                renderActivityNav();
                 document.getElementById('loading').style.display = 'none';
             } catch (error) {
                 console.error('Error loading project:', error);
                 showToast('Error al cargar proyecto', 'error');
             }
+        }
+
+        function renderActivityNav() {
+            const nav = document.getElementById('activity-nav');
+            nav.innerHTML = ACTIVIDADES.map(act => `
+                <div class="activity-nav-btn" id="nav-btn-${act.num}" onclick="scrollToActividad(${act.num})">
+                    ${act.num}
+                </div>
+            `).join('');
         }
 
         function renderChecklist() {
@@ -254,7 +303,6 @@
                 ${renderBloque4()}
             `;
 
-            // Restore state
             restoreState();
         }
 
@@ -269,44 +317,94 @@
                         </div>
                     </div>
 
-                    ${renderActividad(1, 'MOVIMIENTO DE TIERRA', [
-                        ['Replanteo', 'Ejes y niveles según planos'],
-                        ['Nivelación', 'Compactación del terreno'],
-                        ['Excavación', 'Profundidad según diseño'],
-                        ['Retiro de escombros', 'Limpieza del área'],
-                        ['Protección de linderos', 'Estabilización de taludes']
+                    ${renderActividad(1, 'REDES ELÉCTRICAS', [
+                        ['Cajas de salida', 'A plomo, altura según diseño (40cm/1.20m)'],
+                        ['Tubería conduit', 'Recta, bien fijada, sin dobleces bruscos'],
+                        ['Calibre de cables', 'Según diseño (AWG 12/14/10)'],
+                        ['Colores de cables', 'Fase (rojo/negro), Neutro (blanco), Tierra (verde)'],
+                        ['Tablero eléctrico', 'Instalado, circuitos identificados'],
+                        ['Puestas a tierra', 'Instaladas, resistencia < 25 ohmios'],
+                        ['Prueba de continuidad', 'Todos los circuitos continuos'],
+                        ['Prueba de polaridad', 'Fase-neutro-tierra correctos en todos los puntos'],
+                        ['Cajas empotradas', 'A ras con muro, sin daños'],
+                        ['Protecciones', 'Cables protegidos, sin expuestos'],
+                        ['Ductos en losa', 'Instalados antes de vaciado, bien fijados'],
+                        ['Caja para interruptores', 'Altura 1.20m, alineada con puertas'],
+                        ['Circuitos independientes', 'Cocina, lavandería, duchas separados'],
+                        ['Capacidad tablero', 'Breakers correctos por circuito (15A/20A/30A)'],
+                        ['Etiquetado', 'Todos los cables identificados en tablero']
                     ], 1)}
 
-                    ${renderActividad(2, 'MAMPOSTERÍA', [
-                        ['Trazo de muros', 'Según planos arquitectónicos'],
-                        ['Primera hilada', 'Nivelada y plomo'],
-                        ['Refuerzo vertical', 'Cada 80cm o según diseño'],
-                        ['Cadena de amarre', 'Anclada a columnas'],
-                        ['Limpieza de juntas', 'Antes de pañete']
+                    ${renderActividad(2, 'DEMOLICIONES Y RETIROS', [
+                        ['Área protegida', 'Pisos, marcos, elementos a conservar protegidos'],
+                        ['Servicios cortados', 'Agua, luz, gas cerrados antes de demolición'],
+                        ['Demolición completa', 'Según alcance, sin residuos de muros demolados'],
+                        ['Bordes de corte', 'Rectos, limpios, sin desprendimientos'],
+                        ['Varillas expuestas', 'Cortadas a ras, sin puntas peligrosas'],
+                        ['Escombros retirados', 'Área limpia, escombros en contenedor'],
+                        ['Elementos a conservar', 'Sin daños, limpios, funcionales'],
+                        ['Instalaciones existentes', 'Tuberías/cables no afectados sin protección'],
+                        ['Polvo controlado', 'Área humedecida, ventilación adecuada'],
+                        ['EPP utilizado', 'Todo el personal con equipo completo'],
+                        ['Herramientas adecuadas', 'Martillo, esmeril, taladro según material'],
+                        ['Andamios/escaleras', 'Estables, en buen estado'],
+                        ['Señalización', 'Área demarcada, señal de demolición'],
+                        ['Entrega del área', 'Limpia, lista para siguiente actividad'],
+                        ['Acta de recibido', 'Firmada por director de obra']
                     ], 2)}
 
-                    ${renderActividad(3, 'CIMIENTOS', [
-                        ['Excavación de cimientos', 'Profundidad y ancho según cálculo'],
-                        ['Plantilla de concreto pobre', '5-10cm de espesor'],
-                        ['Refuerzo instalado', 'Según planos estructurales'],
-                        ['Vaciado de concreto', 'F\'c especificado'],
-                        ['Curado', '7 días mínimo']
+                    ${renderActividad(3, 'PLOMERÍA', [
+                        ['Tuberías de agua', 'PVC CPVC/PPR según diseño, rectas'],
+                        ['Tuberías de desagüe', 'PVC sanitario, con pendiente'],
+                        ['Pendientes de desagüe', '1-2% hacia desagüe principal'],
+                        ['Soportes de tubería', 'Cada 1.5m (horizontal), cada 3m (vertical)'],
+                        ['Prueba de presión agua', '150 PSI por 2 horas, sin fugas'],
+                        ['Prueba de desagües', 'Agua fluye rápido, sin estancamientos'],
+                        ['Salidas de agua', 'Alturas correctas (lavamanos 85cm, ducha 1.20m)'],
+                        ['Salidas de desagüe', 'Posiciones según aparatos sanitarios'],
+                        ['Válvulas de paso', 'Instaladas, accesibles, funcionales'],
+                        ['Caja de registro', 'Instalada, tapa accesible'],
+                        ['Tuberías empotradas', 'Protegidas, sin dobleces bruscos'],
+                        ['Aislamiento térmico', 'Tuberías de agua caliente aisladas'],
+                        ['Ventilerías', 'Instaladas, salida en cubierta'],
+                        ['Protecciones', 'Tapones en salidas de tubería'],
+                        ['Etiquetado', 'Tuberías identificadas (agua fría/caliente/desagüe)']
                     ], 3)}
 
-                    ${renderActividad(4, 'CONCRETOS', [
-                        ['Encofrado', 'Nivel, plomo, limpio'],
-                        ['Refuerzo', 'Según planos, separadores'],
-                        ['Vaciado', 'Vibrado, sin huecos'],
-                        ['Desencofrado', 'Sin daños en bordes'],
-                        ['Curado', '7 días mínimo']
+                    ${renderActividad(4, 'MAMPOSTERÍA', [
+                        ['Trazado de muros', 'Según planos, medidas correctas'],
+                        ['Limpieza de base', 'Superficie limpia, humedecida'],
+                        ['Primera hilada', 'Nivelada, a escuadra'],
+                        ['Bloques/ladrillos', 'Sin roturas, limpios, humedecidos'],
+                        ['Mortero', 'Proporción correcta (1:4), fresco'],
+                        ['Juntas verticales', 'Llenas, 1cm espesor, trabadas'],
+                        ['Juntas horizontales', 'Llenas, 1cm espesor, uniformes'],
+                        ['Plomo del muro', 'Vertical en ambos sentidos'],
+                        ['Nivel de hiladas', 'Horizontal cada 3 hiladas'],
+                        ['Refuerzos horizontales', 'Cada 3 hiladas o según diseño'],
+                        ['Refuerzos verticales', 'En esquinas, encuentros, bordes'],
+                        ['Encuentros con columnas', 'Traba o anclaje correcto'],
+                        ['Dinteles instalados', 'Sobre puertas/ventanas, empotrados'],
+                        ['Regatas para instalaciones', 'Abiertas, dimensiones correctas'],
+                        ['Curado del muro', 'Húmedo por 7 días mínimo']
                     ], 4)}
 
-                    ${renderActividad(5, 'PAÑETES', [
-                        ['Preparación de superficie', 'Limpia, humedecida'],
-                        ['Maestros instalados', 'Plomo, nivel, alineados'],
-                        ['Primera capa', 'Adherencia correcta'],
-                        ['Segunda capa', 'Espesor uniforme'],
-                        ['Acabado', 'Liso, sin grietas']
+                    ${renderActividad(5, 'REVOQUES (PAÑETES)', [
+                        ['Superficie preparada', 'Limpia, húmeda, sin polvo'],
+                        ['Humedecimiento previo', 'Muro saturado 1 hora antes'],
+                        ['Puntos de referencia', 'Instalados, a plomo y nivel'],
+                        ['Proporción de mortero', '1:4 (cemento:arena), consistente'],
+                        ['Primera capa', '5-8mm, bien adherida'],
+                        ['Segunda capa', '10-12mm, enrasada con maestras'],
+                        ['Espesor total', '15-20mm, uniforme'],
+                        ['Plomo del muro', 'Vertical en ambos sentidos'],
+                        ['Nivel del muro', 'Horizontal, sin ondulaciones'],
+                        ['Esquinas', 'A 90°, bien definidas'],
+                        ['Encuentros cielo-muro', 'Rectos, limpios'],
+                        ['Regatas tapadas', 'Llenas, al ras del muro'],
+                        ['Acabado', 'Flotado, textura uniforme'],
+                        ['Grietas o fisuras', 'Sin grietas visibles'],
+                        ['Curado', 'Húmedo por 7 días mínimo']
                     ], 5)}
                 </div>
             `;
@@ -324,43 +422,93 @@
                     </div>
 
                     ${renderActividad(6, 'ESTUCOS', [
-                        ['Preparación de superficie', 'Limpia, sin polvo'],
-                        ['Primera capa', 'Adherencia correcta'],
-                        ['Segunda capa', 'Espesor uniforme'],
-                        ['Acabado', 'Liso, sin grietas'],
-                        ['Protección', 'Sin daños posteriores']
+                        ['Muro de pañete seco', 'Mínimo 14 días de curado, humedad <15%'],
+                        ['Superficie limpia', 'Sin polvo, grasa, partículas sueltas'],
+                        ['Grietas reparadas', 'Masilladas, lijadas, sin fisuras'],
+                        ['Huecos tapados', 'De tornillos, clavos, imperfecciones'],
+                        ['Imprimación selladora', 'Aplicada, uniforme, secada'],
+                        ['Proporción de estuco', 'Según fabricante, consistencia cremosa'],
+                        ['Primera capa', '2-3mm, bien extendida, cubre todo'],
+                        ['Tiempo de secado', 'Según fabricante (4-6 horas mínimo)'],
+                        ['Lijado primera capa', 'Lija 220, sin marcas, al ras'],
+                        ['Limpieza de polvo', 'Trapo húmedo, sin residuos'],
+                        ['Segunda capa', '1-2mm, capa delgada, uniforme'],
+                        ['Acabado final', 'Liso, sin marcas de espátula'],
+                        ['Esquinas', 'Rectas, bien definidas, sin daños'],
+                        ['Encuentros cielo-muro', 'Limpios, rectos, sin grietas'],
+                        ['Lijado final', 'Lija 320-400, superficie lisa al tacto']
                     ], 6)}
 
                     ${renderActividad(7, 'CIELOS RASOS (RAS)', [
-                        ['Trazo de niveles', 'En todo el perímetro'],
-                        ['Estructura instalada', 'Fija, nivelada'],
-                        ['Placas instaladas', 'Sin huecos, alineadas'],
-                        ['Masilla en juntas', 'Lija, sin marcas'],
-                        ['Acabado', 'Listo para pintura']
+                        ['Trazado de nivel', 'Nivel en todo el perímetro, altura correcta'],
+                        ['Ángulos perimetrales', 'Fijados, nivelados, continuos'],
+                        ['Colgantes/colgadores', 'Cada 1.20m, bien fijos a estructura'],
+                        ['Canales principales', 'Nivelados, separación 1.20m'],
+                        ['Canales secundarios', 'Cada 40cm, perpendiculares a principales'],
+                        ['Refuerzos perimetrales', 'En encuentros, esquinas, bordes'],
+                        ['Placas instaladas', 'Bien atornilladas, juntas trabadas'],
+                        ['Tornillos', 'Cada 20cm, cabeza ligeramente hundida'],
+                        ['Juntas entre placas', '3-5mm, limpias, sin residuos'],
+                        ['Cortes de placas', 'Rectos, limpios, sin astillas'],
+                        ['Encuentros con muros', 'Limpios, sin huecos'],
+                        ['Registros para instalaciones', 'Aberturas para luces, ductos, accesos'],
+                        ['Plomo y nivel', 'Horizontal, sin ondulaciones'],
+                        ['Tratamiento de juntas', 'Cinta y masilla aplicadas'],
+                        ['Limpieza final', 'Sin polvo, residuos de corte']
                     ], 7)}
 
                     ${renderActividad(8, 'MORTERO DE NIVELACIÓN', [
-                        ['Limpieza de superficie', 'Sin polvo, grasa'],
-                        ['Imprimación', 'Aplicada, secada'],
-                        ['Mortero aplicado', 'Espesor uniforme'],
-                        ['Nivelación', 'Verificada'],
-                        ['Curado', 'Según especificaciones']
+                        ['Base limpia', 'Sin polvo, grasa, partículas sueltas'],
+                        ['Base humedecida', 'Saturada 1 hora antes'],
+                        ['Puntos de referencia', 'Maestras cada 1.5m, niveladas'],
+                        ['Malla de refuerzo', 'Instalada (si es requerida), traslapada 10cm'],
+                        ['Proporción de mortero', '1:4 (cemento:arena), consistente'],
+                        ['Espesor de capa', '3-5cm, uniforme según nivel'],
+                        ['Compactación', 'Bien compactado, sin vacíos'],
+                        ['Nivel del piso', 'Horizontal, sin ondulaciones'],
+                        ['Pendientes en baños', '1-2% hacia desagüe'],
+                        ['Acabado superficial', 'Flotado, textura uniforme'],
+                        ['Grietas', 'Sin grietas visibles'],
+                        ['Encuentros con muros', 'Rectos, limpios, a 90°'],
+                        ['Juntas de dilatación', 'Instaladas si área >40m²'],
+                        ['Curado', 'Húmedo por 7 días mínimo'],
+                        ['Secado para siguiente actividad', 'Mínimo 14-21 días']
                     ], 8)}
 
                     ${renderActividad(9, 'CIELO RASO EN DRYWALL', [
-                        ['Estructura metálica', 'Fija, nivelada'],
-                        ['Placas de yeso', 'Instaladas, sin daños'],
-                        ['Masilla en juntas', 'Lija, uniforme'],
-                        ['Cintas instaladas', 'Sin burbujas'],
-                        ['Acabado', 'Listo para pintura']
+                        ['Trazado de estructura', 'Según diseño, niveles correctos'],
+                        ['Ángulos perimetrales', 'Fijados cada 40cm, nivelados'],
+                        ['Colgantes', 'Cada 1.20m, anclaje seguro'],
+                        ['Canales principales', 'Cada 1.20m, nivelados'],
+                        ['Canales secundarios', 'Cada 40cm, perpendiculares'],
+                        ['Refuerzos en bordes', 'Perímetro completo, esquinas'],
+                        ['Placas instaladas', 'Junta trabada, dirección correcta'],
+                        ['Tornillos', 'Cada 20cm, tipo correcto, profundidad'],
+                        ['Cortes para luces', 'Medidas correctas, bordes limpios'],
+                        ['Encuentros con muros', 'Sin huecos, limpio'],
+                        ['Doble capa (si aplica)', 'Segunda capa trabada con primera'],
+                        ['Juntas tratadas', 'Cinta embebida, masilla aplicada'],
+                        ['Tornillos masillados', 'Todos los tornillos tapados'],
+                        ['Lijado', 'Liso, sin marcas visibles'],
+                        ['Limpieza', 'Sin polvo, residuos']
                     ], 9)}
 
                     ${renderActividad(10, 'PINTURA PRIMERA MANO', [
-                        ['Superficie preparada', 'Limpia, seca, lijada'],
-                        ['Imprimación', 'Aplicada uniformemente'],
-                        ['Corte de bordes', 'Repasado'],
-                        ['Primera mano', 'Rodillo, uniforme'],
-                        ['Secado', '24 horas mínimo']
+                        ['Muro/cielo seco', 'Humedad <15%, mínimo 14 días después de revoque'],
+                        ['Superficie limpia', 'Sin polvo, grasa, partículas'],
+                        ['Grietas reparadas', 'Masilladas, lijadas'],
+                        ['Imprimación aplicada', 'Selladora, uniforme, secada'],
+                        ['Protecciones instaladas', 'Pisos, marcos, enchufes, interruptores'],
+                        ['Pintura preparada', 'Mezclada, dilución correcta (10-15%)'],
+                        ['Corte de bordes', 'Franja 5-7cm en esquinas, encuentros'],
+                        ['Aplicación en cielo', 'Rodillo de pelo corto, uniforme'],
+                        ['Aplicación en muros', 'Rodillo de pelo medio, de arriba abajo'],
+                        ['Cobertura', 'Uniforme, sin zonas sin pintar'],
+                        ['Marcas de rodillo', 'Mínimas, uniformes'],
+                        ['Secado', '4-6 horas al tacto, 24 horas para repaint'],
+                        ['Protecciones retiradas', 'Antes que pintura seque'],
+                        ['Limpieza de salpicaduras', 'Inmediata, sin residuos'],
+                        ['Herramientas limpias', 'Lavadas, secas, guardadas']
                     ], 10)}
                 </div>
             `;
@@ -378,42 +526,92 @@
                     </div>
 
                     ${renderActividad(11, 'ENCHAPE', [
-                        ['Impermeabilización', 'Duchas y baños, 2-3 manos'],
+                        ['Impermeabilización aplicada', 'Duchas y baños, 2-3 manos'],
                         ['Prueba de estanqueidad', '24 horas, sin fugas'],
-                        ['Pendientes', '1-2% hacia desagüe'],
-                        ['Trazado de niveles', 'Línea en todo el perímetro'],
-                        ['Distribución de piezas', 'Sin cortes <50% en bordes']
+                        ['Pendientes verificadas', '1-2% hacia desagüe'],
+                        ['Trazado de niveles', 'Línea de inicio en todo el perímetro'],
+                        ['Distribución de piezas', 'Sin cortes <50% en bordes visibles'],
+                        ['Perfiles de aluminio', 'Instalados en esquinas y bordes'],
+                        ['Pegante aplicado', 'Espátula dentada, no más de 1m² a la vez'],
+                        ['Piezas colocadas', 'Presionadas, con separadores'],
+                        ['Nivel y alineación', 'Verificado cada pieza'],
+                        ['Juntas uniformes', '2-3mm, alineadas'],
+                        ['Nichos construidos', 'Según diseño, impermeables'],
+                        ['Cortes alrededor de desagüe', 'Precisos, convergentes'],
+                        ['Rejilla de desagüe', 'Al nivel del enchape'],
+                        ['Lechada aplicada', 'Juntas llenas, sin vacíos'],
+                        ['Silicón sanitario', 'Encuentros con sanitarios, bordes']
                     ], 11)}
 
                     ${renderActividad(12, 'PINTURA SEGUNDA MANO', [
                         ['Primera mano seca', 'Mínimo 24 horas'],
-                        ['Lijado ligero', 'Lija 220-320'],
-                        ['Limpieza de polvo', 'Trapo húmedo'],
-                        ['Segunda mano', 'Rodillo, uniforme'],
-                        ['Secado', '4-6 horas al tacto']
+                        ['Lijado ligero', 'Lija 220-320, sin dañar primera mano'],
+                        ['Limpieza de polvo', 'Trapo de microfibra húmedo'],
+                        ['Defectos corregidos', 'Huecos, grietas masillados'],
+                        ['Protecciones verificadas', 'Pisos, marcos, enchufes'],
+                        ['Pintura preparada', 'Misma de primera mano, mezclada'],
+                        ['Corte de bordes', 'Repasado, franja 5-7cm'],
+                        ['Aplicación en cielos', 'Rodillo de pelo corto, uniforme'],
+                        ['Aplicación en muros', 'Rodillo de pelo medio, W pattern'],
+                        ['Segunda pasada', 'Sin cargar rodillo, dirección vertical'],
+                        ['Cobertura', 'Uniforme, sin zonas descubiertas'],
+                        ['Secado', '4-6 horas al tacto'],
+                        ['Verificación con luz rasante', 'Sin zonas oscuras o sin cubrir'],
+                        ['Retoques aplicados', 'Defectos menores corregidos'],
+                        ['Herramientas limpias', 'Lavadas, guardadas']
                     ], 12)}
 
                     ${renderActividad(13, 'CARPINTERÍAS', [
                         ['Vanos verificados', 'Medidas correctas, a plomo'],
-                        ['Marcos instalados', 'A plomo, nivelados, fijados'],
+                        ['Marcos instalados', 'A plomo, nivelados, fijados (3 puntos/lado)'],
+                        ['Relleno de juntas', 'Espuma o mortero, sin huecos'],
                         ['Puertas instaladas', 'Bisagras fijas, holgura 3-4mm'],
-                        ['Puertas funcionan', 'Sin rozar'],
-                        ['Cerraduras y manijas', 'Instaladas, funcionan']
+                        ['Puertas funcionan', 'Abren/cierran suavemente, sin rozar'],
+                        ['Cerraduras y manijas', 'Instaladas, funcionan correctamente'],
+                        ['Closets armados', 'Según instrucciones, escuadra'],
+                        ['Closets nivelados', 'Sin inclinación, puertas cierran solas'],
+                        ['Closets fijados al muro', 'Tornillos o escuadras, anti-volcamiento'],
+                        ['Correderas instaladas', 'Niveladas, deslizan suavemente'],
+                        ['Estantes instalados', 'Nivelados, soportes fijos'],
+                        ['Zócalos instalados', 'Pegados, sin huecos, encuentros limpios'],
+                        ['Herrajes verificados', 'Todos fijos, funcionando'],
+                        ['Acabados sin daños', 'Sin rayones, golpes, astillas'],
+                        ['Limpieza final', 'Sin aserrín, polvo, residuos']
                     ], 13)}
 
                     ${renderActividad(14, 'INSTALACIÓN DE MESONES', [
-                        ['Área verificada', 'Medidas correctas'],
-                        ['Gabinetes instalados', 'Nivelados, fijos'],
-                        ['Mesón colocado', 'Completamente apoyado'],
-                        ['Nivelación', 'Horizontal en todo sentido'],
-                        ['Lavaplatos instalado', 'Sellado, sin fugas']
+                        ['Área verificada', 'Medidas correctas, conexiones en posición'],
+                        ['Mesón verificado', 'Sin daños, cortes correctos, color aprobado'],
+                        ['Gabinetes instalados', 'Nivelados, fijos, tornillos apretados'],
+                        ['Soportes instalados', 'Perfiles de aluminio, fijados al muro'],
+                        ['Mesón colocado', 'Completamente apoyado, nivelado'],
+                        ['Nivelación verificada', 'Horizontal en todo sentido'],
+                        ['Fijación aplicada', 'Adhesivo de montaje, secando'],
+                        ['Cortes verificados', 'Lavaplatos y estufa, bordes pulidos'],
+                        ['Refuerzo de bordes', 'En cortes de lavaplatos'],
+                        ['Lavaplatos instalado', 'Sellado con silicón, sin fugas'],
+                        ['Estufa instalada', 'Al ras del mesón, grapas fijas'],
+                        ['Silicón aplicado', 'Bordes y encuentros, cordón uniforme'],
+                        ['Salpicaderas instaladas', 'Fijas, selladas en encuentro con mesón'],
+                        ['Acabados sin daños', 'Sin rayones, golpes, manchas'],
+                        ['Prueba de agua', 'Lavaplatos, sin fugas en conexiones']
                     ], 14)}
 
-                    ${renderActividad(15, 'PINTURA TERCERA MANO', [
-                        ['Segunda mano seca', '24-48 horas'],
-                        ['Lijado final', 'Lija 400-600, suave'],
-                        ['Limpieza exhaustiva', 'Sin polvo'],
-                        ['Tercera mano', 'Capa delgada, uniforme'],
+                    ${renderActividad(15, 'TERCERA MANO DE PINTURA', [
+                        ['Segunda mano seca', '24-48 horas mínimo'],
+                        ['Lijado final', 'Lija 400-600, muy suave'],
+                        ['Limpieza exhaustiva', 'Sin polvo, partículas'],
+                        ['Defectos verificados', 'Luz rasante, marcados'],
+                        ['Defectos corregidos', 'Masilla ultrafina, lijados'],
+                        ['Protecciones verificadas', 'Pisos, marcos, enchufes'],
+                        ['Pintura de acabado', 'Color correcto, mismo lote, brillo especificado'],
+                        ['Pintura preparada', 'Mezclada, mínima dilución'],
+                        ['Corte de bordes', 'Brocha de alta calidad, sin marcas'],
+                        ['Aplicación en cielos', 'Rodillo de pelo corto (6mm)'],
+                        ['Aplicación en muros', 'Rodillo de pelo corto (9mm), W pattern'],
+                        ['Capa delgada', 'Más delgada que anteriores'],
+                        ['Protecciones retiradas', 'Antes que pintura seque'],
+                        ['Limpieza de salpicaduras', 'Marcos, pisos, interruptores'],
                         ['Verificación final', 'Luz rasante, sin defectos']
                     ], 15)}
                 </div>
@@ -432,34 +630,74 @@
                     </div>
 
                     ${renderActividad(16, 'BUITRÓN', [
-                        ['Ubicación verificada', 'Según planos'],
-                        ['Estructura armada', 'Varillas, separadores'],
-                        ['Concreto vaciado', 'F\'c especificado'],
-                        ['Tapa instalada', 'Ajustada, nivelada'],
-                        ['Accesibilidad', 'Sin obstáculos']
+                        ['Ubicación verificada', 'Según planos, accesible'],
+                        ['Medidas confirmadas', 'Según tuberías y registros'],
+                        ['Estructura armada', 'Varillas, separadores, amarras'],
+                        ['Encofrado instalado', 'Rígido, nivelado, limpio'],
+                        ['Concreto vaciado', 'F\'c especificado, vibrado'],
+                        ['Curado aplicado', '7 días mínimo'],
+                        ['Desencofrado', 'Sin daños en bordes'],
+                        ['Tapa instalada', 'Ajustada, nivelada con piso'],
+                        ['Accesibilidad verificada', 'Sin obstáculos, fácil apertura'],
+                        ['Señalización', 'Visible, identifica uso'],
+                        ['Impermeabilización', 'Juntas selladas, sin filtraciones'],
+                        ['Acabado alrededor', 'Piso/muro terminado, limpio'],
+                        ['Prueba de funcionamiento', 'Acceso a válvulas/registros'],
+                        ['Limpieza final', 'Sin escombros, residuos'],
+                        ['Entrega verificada', 'Funcional, accesible, seguro']
                     ], 16)}
 
                     ${renderActividad(17, 'APARATOS Y ACCESORIOS', [
                         ['Sanitarios instalados', 'Fijos, nivelados, sellados'],
-                        ['Prueba de agua', 'Sin fugas'],
-                        ['Grifería instalada', 'Fija, sin fugas'],
+                        ['Prueba de agua en sanitarios', 'Sin fugas, descarga correcta'],
+                        ['Lavamanos instalados', 'Fijos, nivelados, sifón conectado'],
+                        ['Grifería instalada', 'Fija, sin fugas, funciona'],
+                        ['Duchas instaladas', 'Fijas, selladas, sin fugas'],
                         ['Accesorios de baño', 'Toalleros, papelero, jabonera'],
-                        ['Espejos instalados', 'Fijos, nivelados']
+                        ['Espejos instalados', 'Fijos, nivelados, sin daños'],
+                        ['Ventiladores instalados', 'Fijos, funcionando, sin ruido'],
+                        ['Extractores instalados', 'Fijos, ducto conectado, funciona'],
+                        ['Accesorios de cocina', 'Canastillas, ganchos, repisas'],
+                        ['Tendederos instalados', 'Fijos, soportan carga'],
+                        ['Barras de apoyo', 'Fijas, soportan peso (baños)'],
+                        ['Silicón aplicado', 'Encuentros, bordes, cordón uniforme'],
+                        ['Limpieza final', 'Sin residuos, manchas, polvo'],
+                        ['Prueba general', 'Todo funciona, sin fugas']
                     ], 17)}
 
                     ${renderActividad(18, 'DETALLADO DE NOVEDADES', [
-                        ['Recorrido completo', 'Todos los espacios'],
-                        ['Novedades identificadas', 'Lista con fotos'],
-                        ['Novedades clasificadas', 'Por prioridad'],
-                        ['Informe generado', 'Documento formal'],
-                        ['Plan de acción', 'Cronograma, recursos']
+                        ['Recorrido completo realizado', 'Todos los espacios verificados'],
+                        ['Novedades identificadas', 'Lista completa, con fotos'],
+                        ['Novedades clasificadas', 'Por prioridad (alta, media, baja)'],
+                        ['Novedades ubicadas', 'Por espacio/área'],
+                        ['Novedades descritas', 'Detalle claro, acción requerida'],
+                        ['Responsables asignados', 'Por tipo de novedad'],
+                        ['Tiempos estimados', 'Por novedad, realistas'],
+                        ['Materiales requeridos', 'Listados, disponibles'],
+                        ['Informe generado', 'Documento formal, con fotos'],
+                        ['Informe compartido', 'Equipo, cliente, proveedores'],
+                        ['Seguimiento programado', 'Fechas, responsables'],
+                        ['Prioridades definidas', 'Críticas primero'],
+                        ['Presupuesto estimado', 'Costos de corrección'],
+                        ['Aprobaciones obtenidas', 'Cliente, dirección técnica'],
+                        ['Plan de acción creado', 'Cronograma, recursos, responsables']
                     ], 18)}
 
                     ${renderActividad(19, 'ASEO GENERAL', [
-                        ['Escombros retirados', 'Todos los espacios'],
+                        ['Escombros retirados', 'Todos los espacios, contenedores'],
+                        ['Herramientas retiradas', 'Todas, sin dejar residuos'],
                         ['Protecciones retiradas', 'Pisos, muros, marcos'],
-                        ['Pisos lavados', 'Sin manchas, residuos'],
-                        ['Vidrios limpiados', 'Sin manchas, marcas'],
+                        ['Residuos de pintura', 'Limpiados de marcos, pisos, enchufes'],
+                        ['Pisos lavados', 'Sin manchas, residuos, polvo'],
+                        ['Juntas de enchape limpias', 'Sin residuos de lechada, cemento'],
+                        ['Vidrios limpiados', 'Sin manchas, marcas, polvo'],
+                        ['Marcos limpiados', 'Sin polvo, pintura, residuos'],
+                        ['Enchufes e interruptores', 'Limpios, sin pintura, polvo'],
+                        ['Salidas de aire', 'Rejillas limpias, sin polvo'],
+                        ['Baños limpiados', 'Sanitarios, lavamanos, duchas, pisos'],
+                        ['Cocina limpiada', 'Mesones, gabinetes, pisos'],
+                        ['Closets limpiados', 'Interior, estantes, correderas'],
+                        ['Ventanas y vidrios', 'Limpios, sin marcas, polvo'],
                         ['Inspección final', 'Inmaculado, listo para entrega']
                     ], 19)}
                 </div>
@@ -487,11 +725,46 @@
                 `;
             }).join('');
 
+            // Holds específicos por actividad
+            const holdsData = {
+                1: [['Antes de cerrar muros - cajas y tuberías instaladas', 'Director de Obra', 'Revisión visual completa'], ['Prueba de continuidad y polaridad', 'Electricista', 'Multímetro'], ['Tablero instalado y circuitos identificados', 'Director de Obra', 'Verificación circuito por circuito'], ['Puesta a tierra medida con telurímetro', 'Electricista', '< 25 ohmios']],
+                2: [['Servicios cortados antes de iniciar', 'Director de Obra', 'Verificación en sitio'], ['Protecciones instaladas antes de demolición', 'Director de Obra', 'Revisión visual'], ['Demolición completada según alcance', 'Director de Obra', 'Comparar con planos'], ['Área entregada limpia y segura', 'Director de Obra', 'Walkthrough final']],
+                3: [['Prueba de presión de agua (150 PSI x 2h)', 'Plomero', 'Manómetro, sin caídas'], ['Prueba de desagües (flujo y pendientes)', 'Director de Obra', 'Cubetas de agua'], ['Antes de cerrar muros - tuberías instaladas', 'Director de Obra', 'Revisión visual completa'], ['Válvulas de paso instaladas y funcionales', 'Director de Obra', 'Operación manual']],
+                4: [['Trazado verificado (medidas y escuadra)', 'Director de Obra', 'Cinta métrica, escuadra'], ['Primera hilada nivelada y a escuadra', 'Director de Obra', 'Nivel, escuadra'], ['Refuerzos instalados (horizontales y verticales)', 'Director de Obra', 'Revisión visual'], ['Muro terminado (plomo, nivel, juntas)', 'Director de Obra', 'Nivel, plomo']],
+                5: [['Maestras instaladas (plomo y nivel)', 'Director de Obra', 'Nivel, plomo'], ['Primera capa adherida (sin desprendimientos)', 'Director de Obra', 'Inspección visual'], ['Muro terminado (plomo, nivel, esquinas a 90°)', 'Director de Obra', 'Nivel, escuadra'], ['Curado completado (7 días húmedo)', 'Maestro de Obra', 'Registro diario']],
+                6: [['Muro seco y limpio antes de estuco', 'Director de Obra', 'Medidor de humedad'], ['Imprimación aplicada uniformemente', 'Director de Obra', 'Inspección visual'], ['Después de primera capa (secado completo)', 'Maestro de Obra', 'Tacto, sin humedad'], ['Acabado final (luz rasante)', 'Director de Obra', 'Linterna a ras del muro']],
+                7: [['Trazado de nivel en todo el perímetro', 'Director de Obra', 'Nivel láser'], ['Estructura metálica instalada (colgantes y canales)', 'Director de Obra', 'Revisión visual, distancias'], ['Placas atornilladas (tornillos cada 20cm)', 'Maestro de Obra', 'Conteo y verificación'], ['Cielo terminado (nivel, juntas tratadas)', 'Director de Obra', 'Nivel, luz rasante']],
+                8: [['Maestras niveladas (nivel y pendientes)', 'Director de Obra', 'Nivel láser'], ['Malla de refuerzo instalada', 'Director de Obra', 'Inspección visual'], ['Nivel y pendientes verificadas', 'Director de Obra', 'Nivel, regla'], ['Curado completado (7 días) + secado (14-21 días)', 'Maestro de Obra', 'Registro diario, medidor humedad']],
+                9: [['Trazado y niveles verificados', 'Director de Obra', 'Nivel láser, cinta métrica'], ['Estructura metálica completa', 'Director de Obra', 'Revisión visual completa'], ['Placas atornilladas (todos los tornillos)', 'Maestro de Obra', 'Inspección visual'], ['Juntas y tornillos masillados + lijado', 'Director de Obra', 'Luz rasante']],
+                10: [['Imprimación aplicada y secada', 'Director de Obra', 'Inspección visual, tacto'], ['Protecciones instaladas antes de pintar', 'Director de Obra', 'Revisión visual'], ['Corte de bordes completado', 'Maestro Pintor', 'Inspección visual'], ['Primera mano terminada (cobertura uniforme)', 'Director de Obra', 'Luz rasante']],
+                11: [['Impermeabilización + prueba de agua (24h)', 'Director de Obra', 'Inspección visual, sin fugas'], ['Pendientes verificadas (1-2% hacia desagüe)', 'Director de Obra', 'Nivel'], ['Antes de lechada (juntas, nivel, alineación)', 'Director de Obra', 'Inspección visual completa'], ['Enchape terminado (lechada + silicón)', 'Director de Obra', 'Inspección visual, prueba de agua']],
+                12: [['Primera mano seca (24 horas mínimo)', 'Maestro Pintor', 'Tacto, sin humedad'], ['Lijado y limpieza completados', 'Maestro Pintor', 'Inspección visual, tacto'], ['Segunda mano aplicada (cobertura uniforme)', 'Director de Obra', 'Luz rasante'], ['Defectos corregidos antes de tercera mano', 'Director de Obra', 'Luz rasante']],
+                13: [['Marcos instalados (plomo, nivel, fijación)', 'Director de Obra', 'Nivel, plomo'], ['Puertas funcionando (sin rozar, holguras)', 'Director de Obra', 'Operación manual'], ['Closets nivelados y fijados al muro', 'Director de Obra', 'Nivel, inspección visual'], ['Todos los herrajes verificados', 'Director de Obra', 'Operación manual completa']],
+                14: [['Gabinetes nivelados y fijos', 'Director de Obra', 'Nivel, inspección visual'], ['Mesón nivelado y apoyado completamente', 'Director de Obra', 'Nivel, inspección visual'], ['Lavaplatos sellado (prueba de agua sin fugas)', 'Director de Obra', 'Prueba de agua'], ['Silicón aplicado (todos los encuentros)', 'Director de Obra', 'Inspección visual']],
+                15: [['Segunda mano seca (24-48 horas)', 'Maestro Pintor', 'Tacto, sin humedad'], ['Defectos corregidos antes de tercera mano', 'Director de Obra', 'Luz rasante'], ['Tercera mano aplicada (cobertura total, brillo uniforme)', 'Director de Obra', 'Luz rasante'], ['Entrega del área (limpia, sin salpicaduras)', 'Director de Obra', 'Walkthrough final']],
+                16: [['Refuerzo instalado (varillas, separadores)', 'Director de Obra', 'Inspección visual'], ['Concreto vaciado (f\'c especificado)', 'Director de Obra', 'Slump test, probeta'], ['Tapa instalada (nivelada, ajustada)', 'Director de Obra', 'Nivel, inspección visual'], ['Entrega (accesible, funcional)', 'Director de Obra', 'Prueba de acceso']],
+                17: [['Sanitarios instalados (fijos, sin fugas)', 'Director de Obra', 'Prueba de agua'], ['Grifería instalada (sin fugas, funciona)', 'Director de Obra', 'Prueba de funcionamiento'], ['Accesorios fijos (toalleros, espejos, etc.)', 'Director de Obra', 'Inspección visual, prueba de carga'], ['Prueba general (todo funciona, sin fugas)', 'Director de Obra', 'Walkthrough completo']],
+                18: [['Recorrido completo realizado', 'Director de Obra', 'Lista de verificación firmada'], ['Novedades documentadas (lista + fotos)', 'Director de Obra', 'Informe con anexos'], ['Informe compartido con equipo', 'Director de Obra', 'Confirmación de recepción'], ['Plan de acción aprobado', 'Cliente / Dirección Técnica', 'Firma de aprobación']],
+                19: [['Escombros y herramientas retirados', 'Director de Obra', 'Recorrido visual'], ['Protecciones retiradas sin daños', 'Director de Obra', 'Inspección visual'], ['Pisos y enchapes limpios', 'Director de Obra', 'Inspección visual, tacto'], ['Entrega (inmaculado, listo)', 'Director de Obra / Cliente', 'Walkthrough final conjunto']]
+            };
+
+            const holds = holdsData[actNum] || [['Verificación inicial', 'Director de Obra', 'Revisión'], ['Verificación durante', 'Director de Obra', 'Revisión'], ['Verificación final', 'Director de Obra', 'Revisión'], ['Aprobación', 'Director de Obra', 'Revisión']];
+
+            const holdsRows = holds.map((hold, idx) => `
+                <tr>
+                    <td class="hold-code">H${idx + 1}</td>
+                    <td>${hold[0]}</td>
+                    <td style="color: var(--wd); font-size: 0.65rem;">${hold[1]}</td>
+                    <td style="color: var(--wd); font-size: 0.65rem;">${hold[2]}</td>
+                    <td><input type="text" class="firma-input" placeholder="Firma" data-firma="${actNum}-h${idx + 1}" oninput="guardarFirma('${actNum}-h${idx + 1}', this.value)"></td>
+                </tr>
+            `).join('');
+
             return `
-                <div class="actividad" data-actividad="${actNum}">
+                <div class="actividad" id="actividad-${actNum}" data-actividad="${actNum}">
                     <div class="actividad-header">
                         <h3 class="actividad-titulo">${titulo}</h3>
-                        <span class="actividad-num">ACT ${actNum}</span>
+                        <span class="actividad-num">ACT ${String(actNum).padStart(2, '0')}</span>
                     </div>
                     <table class="checklist-table">
                         <thead>
@@ -511,30 +784,13 @@
                                 <tr>
                                     <th class="hold-code">Hold</th>
                                     <th>Punto de Control</th>
+                                    <th style="width: 120px;">Responsable</th>
+                                    <th style="width: 120px;">Verificación</th>
                                     <th style="width: 100px;">Firma</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td class="hold-code">H1</td>
-                                    <td>Verificación inicial</td>
-                                    <td><input type="text" class="firma-input" placeholder="Firma" data-firma="${actNum}-h1" oninput="guardarFirma('${actNum}-h1', this.value)"></td>
-                                </tr>
-                                <tr>
-                                    <td class="hold-code">H2</td>
-                                    <td>Verificación durante</td>
-                                    <td><input type="text" class="firma-input" placeholder="Firma" data-firma="${actNum}-h2" oninput="guardarFirma('${actNum}-h2', this.value)"></td>
-                                </tr>
-                                <tr>
-                                    <td class="hold-code">H3</td>
-                                    <td>Verificación final</td>
-                                    <td><input type="text" class="firma-input" placeholder="Firma" data-firma="${actNum}-h3" oninput="guardarFirma('${actNum}-h3', this.value)"></td>
-                                </tr>
-                                <tr>
-                                    <td class="hold-code">H4</td>
-                                    <td>Aprobación</td>
-                                    <td><input type="text" class="firma-input" placeholder="Firma" data-firma="${actNum}-h4" oninput="guardarFirma('${actNum}-h4', this.value)"></td>
-                                </tr>
+                                ${holdsRows}
                             </tbody>
                         </table>
                     </div>
@@ -547,7 +803,12 @@
             Object.entries(checklistData.checks || {}).forEach(([id, checked]) => {
                 if (checked) {
                     const el = document.querySelector(`.checkbox-custom[onclick*="'${id}'"]`);
-                    if (el) el.classList.add('checked');
+                    if (el) {
+                        el.classList.add('checked');
+                        // Update activity nav
+                        const actNum = id.split('-')[0];
+                        updateActivityNavStatus(actNum);
+                    }
                 }
             });
 
@@ -563,8 +824,14 @@
                 if (input) input.value = value || '';
             });
 
-            // Update progress
             updateAllProgress();
+        }
+
+        function updateActivityNavStatus(actNum) {
+            const btn = document.getElementById(`nav-btn-${actNum}`);
+            if (btn && !btn.classList.contains('completed')) {
+                btn.classList.add('completed');
+            }
         }
 
         window.toggleCheck = (id, el) => {
@@ -572,6 +839,7 @@
             checklistData.checks[id] = el.classList.contains('checked');
             markModified();
             updateProgress(el);
+            updateActivityNavStatus(id.split('-')[0]);
             autoSave();
         };
 
@@ -585,6 +853,29 @@
             checklistData.firmas[id] = value;
             markModified();
             autoSave();
+        };
+
+        window.scrollToActividad = (actNum) => {
+            const actividad = document.getElementById(`actividad-${actNum}`);
+            if (actividad) {
+                actividad.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Update active nav button
+                document.querySelectorAll('.activity-nav-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.getElementById(`nav-btn-${actNum}`).classList.add('active');
+            }
+        };
+
+        window.scrollToBloque = (num) => {
+            const bloque = document.getElementById(`bloque${num}`);
+            if (bloque) {
+                bloque.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Update active tab
+                document.querySelectorAll('.block-tab').forEach((tab, idx) => {
+                    tab.classList.toggle('active', idx + 1 === num);
+                });
+            }
         };
 
         function markModified() {
@@ -657,17 +948,6 @@
                 }
             });
         }
-
-        window.scrollToBloque = (num) => {
-            const bloque = document.getElementById(`bloque${num}`);
-            if (bloque) {
-                bloque.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                // Update active tab
-                document.querySelectorAll('.nav-tab').forEach((tab, idx) => {
-                    tab.classList.toggle('active', idx + 1 === num);
-                });
-            }
-        };
 
         window.exportarDatos = () => {
             const data = {
