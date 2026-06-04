@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#070707">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Checklist CONEXA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@100;300;400;700&family=Figtree:wght@300;400;500;600;700&family=Syne+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bk: #070707; --s1: #0D0D0D; --s2: #141414; --s3: #1C1C1C; --s4: #252525;
+            --bd: rgba(255,255,255,0.07); --bd2: rgba(255,255,255,0.13);
+            --w: #F4F2ED; --wd: rgba(244,242,237,0.52); --wf: rgba(244,242,237,0.1);
+            --cu: #C4855A; --cu2: #8C5532; --cu3: rgba(196,133,90,0.15);
+            --green: #4ade80; --red: #ef4444; --yellow: #fbbf24;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html { font-size: 16px; }
+        body { background: var(--bk); color: var(--w); font-family: 'Figtree', sans-serif; line-height: 1.6; min-height: 100vh; padding-bottom: 80px; }
+
+        /* Header */
+        header { background: var(--s1); border-bottom: 1px solid var(--bd); padding: 1rem; position: sticky; top: 0; z-index: 100; }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 0.75rem; }
+        .logo-symbol { width: 32px; height: 32px; }
+        .logo-text { font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 1.2rem; letter-spacing: 0.1em; }
+        .logo-text .x { color: var(--cu); }
+        .user-menu { display: flex; align-items: center; gap: 0.5rem; }
+        .user-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--cu); display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
+        .logout-btn { background: var(--s3); border: 1px solid var(--bd); color: var(--wd); padding: 0.4rem 0.75rem; border-radius: 4px; font-size: 0.75rem; cursor: pointer; }
+
+        /* Main Container */
+        .container { max-width: 800px; margin: 0 auto; padding: 1rem; }
+
+        /* Auth Screen */
+        .auth-container { max-width: 400px; margin: 2rem auto; background: var(--s2); border: 1px solid var(--bd); border-radius: 12px; padding: 2rem; }
+        .auth-title { font-family: 'Josefin Sans', sans-serif; font-weight: 600; font-size: 1.5rem; text-align: center; margin-bottom: 1.5rem; }
+        .auth-form { display: flex; flex-direction: column; gap: 0.75rem; }
+        .auth-input { background: var(--s3); border: 1px solid var(--bd); border-radius: 6px; padding: 0.75rem 1rem; color: var(--w); font-size: 0.95rem; width: 100%; }
+        .auth-input:focus { outline: none; border-color: var(--cu); }
+        .auth-btn { background: var(--cu); border: none; border-radius: 6px; padding: 0.75rem 1.5rem; color: var(--w); font-size: 0.85rem; font-weight: 600; cursor: pointer; text-transform: uppercase; transition: all 0.2s; width: 100%; }
+        .auth-btn:hover { background: var(--cu2); }
+        .auth-btn.google { background: #fff; color: #1a1a1a; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+        .auth-divider { display: flex; align-items: center; gap: 1rem; margin: 1rem 0; color: var(--wd); font-size: 0.75rem; }
+        .auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: var(--bd); }
+
+        /* Projects List */
+        .projects-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .projects-title { font-family: 'Josefin Sans', sans-serif; font-weight: 600; font-size: 1.4rem; }
+        .add-btn { background: var(--cu); border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; flex-shrink: 0; }
+
+        .project-list { display: flex; flex-direction: column; gap: 0.75rem; }
+        .project-item { background: var(--s2); border: 1px solid var(--bd); border-radius: 10px; padding: 1rem; cursor: pointer; transition: all 0.2s; }
+        .project-item:active { transform: scale(0.98); }
+        .project-item-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem; }
+        .project-name { font-family: 'Josefin Sans', sans-serif; font-weight: 600; font-size: 1.1rem; }
+        .project-status { font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 4px; background: var(--cu3); color: var(--cu); font-weight: 600; }
+        .project-meta { display: flex; flex-wrap: wrap; gap: 0.75rem; font-size: 0.8rem; color: var(--wd); margin-bottom: 0.75rem; }
+        .project-meta span { display: flex; align-items: center; gap: 0.3rem; }
+        .project-progress { background: var(--s3); border-radius: 4px; height: 6px; overflow: hidden; }
+        .project-progress-fill { height: 100%; background: var(--cu); transition: width 0.3s; }
+        .project-progress-text { font-size: 0.7rem; color: var(--wd); margin-top: 0.35rem; display: flex; justify-content: space-between; }
+
+        /* Empty State */
+        .empty-state { text-align: center; padding: 3rem 1rem; color: var(--wd); }
+        .empty-state-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.5; }
+        .empty-state-text { font-size: 0.9rem; margin-bottom: 1rem; }
+
+        /* Modal */
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 1000; display: none; justify-content: center; align-items: flex-end; }
+        .modal-overlay.visible { display: flex; }
+        .modal { background: var(--s2); border-radius: 16px 16px 0 0; padding: 1.5rem; width: 100%; max-width: 600px; margin: 0 auto; animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .modal-title { font-family: 'Josefin Sans', sans-serif; font-weight: 600; font-size: 1.3rem; }
+        .modal-close { background: none; border: none; color: var(--wd); font-size: 1.5rem; cursor: pointer; padding: 0.5rem; }
+        .modal-form { display: flex; flex-direction: column; gap: 1rem; }
+        .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+        .form-group label { font-size: 0.75rem; color: var(--wd); text-transform: uppercase; letter-spacing: 0.05em; }
+        .form-group input { background: var(--s3); border: 1px solid var(--bd); border-radius: 6px; padding: 0.75rem 1rem; color: var(--w); font-size: 0.95rem; }
+        .form-group input:focus { outline: none; border-color: var(--cu); }
+        .modal-actions { display: flex; gap: 0.75rem; margin-top: 1rem; }
+        .modal-actions button { flex: 1; padding: 0.875rem 1.5rem; border: none; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; }
+        .btn-primary { background: var(--cu); color: var(--w); }
+        .btn-secondary { background: var(--s3); color: var(--w); border: 1px solid var(--bd); }
+
+        /* Bottom Nav */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--s1); border-top: 1px solid var(--bd); padding: 0.5rem; display: flex; justify-content: space-around; z-index: 100; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; padding: 0.5rem 1rem; color: var(--wd); font-size: 0.65rem; cursor: pointer; }
+        .nav-item.active { color: var(--cu); }
+        .nav-icon { font-size: 1.25rem; }
+
+        /* Toast */
+        .toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--s2); border: 1px solid var(--bd); border-radius: 8px; padding: 0.75rem 1.5rem; font-size: 0.8rem; z-index: 2000; opacity: 0; transition: all 0.3s; box-shadow: 0 4px 20px rgba(0,0,0,0.5); white-space: nowrap; }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+        .toast.success { border-color: var(--green); color: var(--green); }
+        .toast.error { border-color: var(--red); color: var(--red); }
+        .toast.info { border-color: var(--cu); color: var(--cu); }
+
+        /* Loading */
+        .loading { display: flex; justify-content: center; padding: 3rem; }
+        .spinner { width: 32px; height: 32px; border: 3px solid var(--bd); border-top-color: var(--cu); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Views */
+        .view { display: none; }
+        .view.active { display: block; }
+
+        @media (min-width: 768px) {
+            .modal-overlay { align-items: center; }
+            .modal { border-radius: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header id="app-header" style="display: none;">
+        <div class="header-content">
+            <div class="logo">
+                <svg class="logo-symbol" viewBox="0 0 200 200">
+                    <line x1="20" y1="20" x2="76" y2="76" stroke="#F4F2ED" stroke-width="16" stroke-linecap="square"/>
+                    <line x1="180" y1="20" x2="124" y2="76" stroke="#F4F2ED" stroke-width="16" stroke-linecap="square"/>
+                    <line x1="20" y1="180" x2="76" y2="124" stroke="#F4F2ED" stroke-width="16" stroke-linecap="square"/>
+                    <line x1="180" y1="180" x2="124" y2="124" stroke="#F4F2ED" stroke-width="16" stroke-linecap="square"/>
+                    <rect x="87" y="87" width="26" height="26" transform="rotate(45 100 100)" fill="#C4855A"/>
+                </svg>
+                <div>
+                    <div class="logo-text">CONE<span class="x">X</span>A</div>
+                </div>
+            </div>
+            <div class="user-menu">
+                <div class="user-avatar" id="user-avatar">U</div>
+                <button class="logout-btn" onclick="app.logout()">Salir</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Loading -->
+        <div id="view-loading" class="view active">
+            <div class="loading"><div class="spinner"></div></div>
+        </div>
+
+        <!-- Auth View -->
+        <div id="view-auth" class="view">
+            <div class="auth-container">
+                <h2 class="auth-title">👋 Bienvenido</h2>
+                <div class="auth-form">
+                    <button class="auth-btn google" onclick="app.loginGoogle()">
+                        <svg width="20" height="20" viewBox="0 0 24 24">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                        </svg>
+                        Continuar con Google
+                    </button>
+                </div>
+                <div class="auth-divider">o usa tu email</div>
+                <form class="auth-form" onsubmit="app.loginEmail(event)">
+                    <input type="email" class="auth-input" placeholder="tu@email.com" required id="auth-email">
+                    <input type="password" class="auth-input" placeholder="Contraseña" required id="auth-password">
+                    <button type="submit" class="auth-btn">Ingresar</button>
+                </form>
+                <p style="text-align: center; margin-top: 1rem; font-size: 0.8rem; color: var(--wd);">
+                    ¿No tienes cuenta? <a href="#" onclick="app.registerEmail(event)" style="color: var(--cu);">Crear una</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Projects View -->
+        <div id="view-projects" class="view">
+            <div class="projects-header">
+                <h1 class="projects-title">📁 Mis Proyectos</h1>
+                <button class="add-btn" onclick="app.openModal()">+</button>
+            </div>
+            <div class="project-list" id="project-list"></div>
+        </div>
+
+        <!-- Checklist View -->
+        <div id="view-checklist" class="view">
+            <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem; align-items: center;">
+                <button class="btn-secondary" onclick="app.showView('projects')" style="padding: 0.5rem 1rem; font-size: 0.8rem;">← Volver</button>
+                <h1 class="projects-title" id="checklist-project-name" style="font-size: 1.2rem; flex: 1;"></h1>
+            </div>
+            <div id="checklist-container"></div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav" id="bottom-nav" style="display: none;">
+        <div class="nav-item active" onclick="app.showView('projects')">
+            <span class="nav-icon">🏠</span>
+            <span>Proyectos</span>
+        </div>
+        <div class="nav-item" onclick="app.showToast('Próximamente', 'info')">
+            <span class="nav-icon">📊</span>
+            <span>Reportes</span>
+        </div>
+        <div class="nav-item" onclick="app.showSettings()">
+            <span class="nav-icon">⚙️</span>
+            <span>Ajustes</span>
+        </div>
+    </nav>
+
+    <!-- New Project Modal -->
+    <div class="modal-overlay" id="modal-new-project" onclick="if(event.target===this) app.closeModal()">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">📁 Nuevo Proyecto</h2>
+                <button class="modal-close" onclick="app.closeModal()">×</button>
+            </div>
+            <div class="modal-form">
+                <div class="form-group">
+                    <label>Nombre del Proyecto *</label>
+                    <input type="text" id="new-project-name" placeholder="Ej: Apto 101 - Edificio Altos">
+                </div>
+                <div class="form-group">
+                    <label>Propietario / Cliente</label>
+                    <input type="text" id="new-project-cliente" placeholder="Ej: Juan Pérez">
+                </div>
+                <div class="form-group">
+                    <label>Dirección</label>
+                    <input type="text" id="new-project-direccion" placeholder="Ej: Calle 10 #45-20">
+                </div>
+                <div class="form-group">
+                    <label>Área (m²)</label>
+                    <input type="number" id="new-project-area" placeholder="Ej: 85">
+                </div>
+                <div class="form-group">
+                    <label>Teléfono</label>
+                    <input type="tel" id="new-project-telefono" placeholder="Ej: 300 123 4567">
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick="app.closeModal()">Cancelar</button>
+                <button class="btn-primary" onclick="app.createProject()">Crear Proyecto</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Firebase & App Logic -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, setDoc, getDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        // ⚠️ REEMPLAZA CON TU CONFIGURACIÓN DE FIREBASE
+        const firebaseConfig = {
+            apiKey: "AIzaSyB1GvqogyJ9ft_VT6N1Rp4EMJVZbrYYcWA",
+            authDomain: "conexa---checklist.firebaseapp.com",
+            projectId: "conexa---checklist",
+            storageBucket: "conexa---checklist.firebasestorage.app",
+            messagingSenderId: "828271606324",
+            appId: "1:828271606324:web:d60590d82cb50afdd5e861"
+        };
+
+        // Inicializar Firebase
+        const firebaseApp = initializeApp(firebaseConfig);
+        const auth = getAuth(firebaseApp);
+        const db = getFirestore(firebaseApp);
+        const googleProvider = new GoogleAuthProvider();
+
+        // App State
+        const state = {
+            user: null,
+            projects: [],
+            currentProject: null,
+            checklistData: {}
+        };
+
+        // App Logic
+        window.app = {
+            init() {
+                onAuthStateChanged(auth, (user) => {
+                    state.user = user;
+                    if (user) {
+                        document.getElementById('app-header').style.display = 'block';
+                        document.getElementById('bottom-nav').style.display = 'flex';
+                        document.getElementById('user-avatar').textContent = user.email?.[0].toUpperCase() || 'U';
+                        this.loadProjects();
+                        this.showView('projects');
+                    } else {
+                        document.getElementById('app-header').style.display = 'none';
+                        document.getElementById('bottom-nav').style.display = 'none';
+                        this.showView('auth');
+                    }
+                });
+            },
+
+            showView(viewName) {
+                document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+                document.getElementById(`view-${viewName}`).classList.add('active');
+
+                // Update nav
+                document.querySelectorAll('.nav-item').forEach((el, i) => {
+                    el.classList.toggle('active', (viewName === 'projects' && i === 0) || (viewName === 'reports' && i === 1) || (viewName === 'settings' && i === 2));
+                });
+            },
+
+            async loginGoogle() {
+                try {
+                    await signInWithPopup(auth, googleProvider);
+                    this.showToast('¡Bienvenido!', 'success');
+                } catch (error) {
+                    this.showToast('Error: ' + error.message, 'error');
+                }
+            },
+
+            async loginEmail(event) {
+                event.preventDefault();
+                const email = document.getElementById('auth-email').value;
+                const password = document.getElementById('auth-password').value;
+                try {
+                    await signInWithEmailAndPassword(auth, email, password);
+                    this.showToast('¡Bienvenido!', 'success');
+                } catch (error) {
+                    this.showToast('Error: ' + error.message, 'error');
+                }
+            },
+
+            async registerEmail(event) {
+                event.preventDefault();
+                const email = document.getElementById('auth-email').value;
+                const password = document.getElementById('auth-password').value;
+                try {
+                    await createUserWithEmailAndPassword(auth, email, password);
+                    this.showToast('Cuenta creada!', 'success');
+                } catch (error) {
+                    this.showToast('Error: ' + error.message, 'error');
+                }
+            },
+
+            async logout() {
+                if (confirm('¿Cerrar sesión?')) {
+                    await signOut(auth);
+                    this.showToast('Sesión cerrada', 'info');
+                }
+            },
+
+            async loadProjects() {
+                try {
+                    const q = query(collection(db, 'proyectos'), where('userId', '==', state.user.uid));
+                    const snapshot = await getDocs(q);
+                    state.projects = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    this.renderProjects();
+                } catch (error) {
+                    console.error('Error loading projects:', error);
+                    this.showToast('Error al cargar proyectos', 'error');
+                }
+            },
+
+            renderProjects() {
+                const container = document.getElementById('project-list');
+                if (state.projects.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📁</div>
+                            <p class="empty-state-text">No tienes proyectos aún</p>
+                            <button class="btn-primary" onclick="app.openModal()" style="margin-top: 1rem; padding: 0.75rem 1.5rem;">Crear primero</button>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = state.projects.map(p => {
+                    const progreso = p.progreso || 0;
+                    const totalItems = 285; // 19 actividades × 15 items
+                    const checkedItems = Math.round((progreso / 100) * totalItems);
+
+                    return `
+                        <div class="project-item" onclick="app.openChecklist('${p.id}')">
+                            <div class="project-item-header">
+                                <div class="project-name">${p.nombre || 'Sin nombre'}</div>
+                                <span class="project-status">${progreso}%</span>
+                            </div>
+                            <div class="project-meta">
+                                ${p.cliente ? `<span>👤 ${p.cliente}</span>` : ''}
+                                ${p.direccion ? `<span>📍 ${p.direccion}</span>` : ''}
+                                ${p.area ? `<span>📐 ${p.area} m²</span>` : ''}
+                            </div>
+                            <div class="project-progress">
+                                <div class="project-progress-fill" style="width: ${progreso}%"></div>
+                            </div>
+                            <div class="project-progress-text">
+                                <span>${checkedItems}/${totalItems} items</span>
+                                <span>${progreso}% completo</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            },
+
+            openModal() {
+                document.getElementById('modal-new-project').classList.add('visible');
+                setTimeout(() => {
+                    document.getElementById('new-project-name').focus();
+                }, 100);
+            },
+
+            closeModal() {
+                document.getElementById('modal-new-project').classList.remove('visible');
+                // Clear form
+                ['new-project-name', 'new-project-cliente', 'new-project-direccion', 'new-project-area', 'new-project-telefono'].forEach(id => {
+                    document.getElementById(id).value = '';
+                });
+            },
+
+            async createProject() {
+                const nombre = document.getElementById('new-project-name').value.trim();
+                const cliente = document.getElementById('new-project-cliente').value.trim();
+                const direccion = document.getElementById('new-project-direccion').value.trim();
+                const area = document.getElementById('new-project-area').value.trim();
+                const telefono = document.getElementById('new-project-telefono').value.trim();
+
+                if (!nombre) {
+                    this.showToast('El nombre es requerido', 'error');
+                    return;
+                }
+
+                try {
+                    const docRef = await addDoc(collection(db, 'proyectos'), {
+                        nombre,
+                        cliente,
+                        direccion,
+                        area,
+                        telefono,
+                        userId: state.user.uid,
+                        progreso: 0,
+                        createdAt: serverTimestamp()
+                    });
+
+                    // Create empty checklist structure
+                    await setDoc(doc(db, 'checklists', docRef.id), {
+                        projectId: docRef.id,
+                        checks: {},
+                        obs: {},
+                        firmas: {},
+                        updatedAt: serverTimestamp()
+                    });
+
+                    this.showToast('Proyecto creado!', 'success');
+                    this.closeModal();
+                    this.loadProjects();
+                } catch (error) {
+                    console.error('Error creating project:', error);
+                    this.showToast('Error al crear proyecto', 'error');
+                }
+            },
+
+            async openChecklist(projectId) {
+                try {
+                    state.currentProject = state.projects.find(p => p.id === projectId);
+                    if (!state.currentProject) return;
+
+                    document.getElementById('checklist-project-name').textContent = state.currentProject.nombre;
+
+                    // Load checklist data
+                    const checklistDoc = await getDoc(doc(db, 'checklists', projectId));
+                    state.checklistData = checklistDoc.exists() ? checklistDoc.data() : { checks: {}, obs: {}, firmas: {} };
+
+                    this.renderChecklist();
+                    this.showView('checklist');
+                } catch (error) {
+                    console.error('Error opening checklist:', error);
+                    this.showToast('Error al abrir checklist', 'error');
+                }
+            },
+
+            renderChecklist() {
+                const container = document.getElementById('checklist-container');
+                const data = state.checklistData;
+
+                // Build checklist HTML (simplified version - full version would have all 4 blocks)
+                container.innerHTML = `
+                    <div style="background: var(--s2); border: 1px solid var(--bd); border-radius: 10px; padding: 1rem; margin-bottom: 1rem;">
+                        <h3 style="font-family: 'Josefin Sans'; font-weight: 600; margin-bottom: 0.5rem;">📋 Datos del Proyecto</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.75rem;">
+                            <div><small style="color: var(--wd);">Cliente</small><div style="color: var(--w);">${state.currentProject.cliente || '-'}</div></div>
+                            <div><small style="color: var(--wd);">Dirección</small><div style="color: var(--w);">${state.currentProject.direccion || '-'}</div></div>
+                            <div><small style="color: var(--wd);">Área</small><div style="color: var(--w);">${state.currentProject.area || '-'} m²</div></div>
+                            <div><small style="color: var(--wd);">Teléfono</small><div style="color: var(--w);">${state.currentProject.telefono || '-'}</div></div>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; padding: 2rem; color: var(--wd);">
+                        <p>🚧 Vista completa de checklist en desarrollo</p>
+                        <p style="font-size: 0.8rem; margin-top: 0.5rem;">Próximamente: los 4 bloques con 19 actividades</p>
+                    </div>
+                `;
+            },
+
+            showToast(message, type = 'info') {
+                const toast = document.getElementById('toast');
+                toast.className = `toast ${type}`;
+                toast.textContent = message;
+                setTimeout(() => toast.classList.add('show'), 10);
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            },
+
+            showSettings() {
+                this.showToast('Ajustes próximamente', 'info');
+            }
+        };
+
+        // Initialize app
+        window.app.init();
+    </script>
+</body>
+</html>
