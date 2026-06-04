@@ -68,6 +68,13 @@
         .empty-state-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.5; }
         .empty-state-text { font-size: 0.9rem; margin-bottom: 1rem; }
 
+        /* Error State */
+        .error-state { text-align: center; padding: 2rem 1rem; background: var(--s2); border: 1px solid var(--red); border-radius: 12px; margin: 2rem 0; }
+        .error-state-icon { font-size: 3rem; margin-bottom: 1rem; }
+        .error-state-title { color: var(--red); font-weight: 600; margin-bottom: 0.5rem; }
+        .error-state-text { color: var(--wd); font-size: 0.85rem; margin-bottom: 1rem; }
+        .error-state code { background: var(--s3); padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; display: block; margin-top: 0.5rem; word-break: break-all; }
+
         /* Modal */
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 1000; display: none; justify-content: center; align-items: flex-end; }
         .modal-overlay.visible { display: flex; }
@@ -142,6 +149,17 @@
         <!-- Loading -->
         <div id="view-loading" class="view active">
             <div class="loading"><div class="spinner"></div></div>
+        </div>
+
+        <!-- Error View -->
+        <div id="view-error" class="view">
+            <div class="error-state">
+                <div class="error-state-icon">⚠️</div>
+                <div class="error-state-title">Error de Configuración</div>
+                <div class="error-state-text" id="error-message">Verifica las credenciales de Firebase</div>
+                <code id="error-details"></code>
+                <button class="btn-primary" onclick="location.reload()" style="margin-top: 1rem; padding: 0.75rem 1.5rem;">Reintentar</button>
+            </div>
         </div>
 
         <!-- Auth View -->
@@ -251,34 +269,53 @@
         import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
         import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, setDoc, getDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
-        // ⚠️ REEMPLAZA CON TU CONFIGURACIÓN DE FIREBASE
+        // Firebase configuration - TUS CREDENCIALES
         const firebaseConfig = {
             apiKey: "AIzaSyB1GvqogyJ9ft_VT6N1Rp4EMJVZbrYYcWA",
             authDomain: "conexa---checklist.firebaseapp.com",
             projectId: "conexa---checklist",
             storageBucket: "conexa---checklist.firebasestorage.app",
             messagingSenderId: "828271606324",
-            appId: "1:828271606324:web:d60590d82cb50afdd5e861"
+            appId: "1:828271606324:web:d60590d82cb50afdd5e861",
             measurementId: "G-XJCYKR3L3Y"
         };
-
-        // Inicializar Firebase
-        const firebaseApp = initializeApp(firebaseConfig);
-        const auth = getAuth(firebaseApp);
-        const db = getFirestore(firebaseApp);
-        const googleProvider = new GoogleAuthProvider();
 
         // App State
         const state = {
             user: null,
             projects: [],
             currentProject: null,
-            checklistData: {}
+            checklistData: {},
+            firebaseInitialized: false
         };
+
+        let auth, db, googleProvider;
+
+        // Initialize Firebase with error handling
+        try {
+            const firebaseApp = initializeApp(firebaseConfig);
+            auth = getAuth(firebaseApp);
+            db = getFirestore(firebaseApp);
+            googleProvider = new GoogleAuthProvider();
+            state.firebaseInitialized = true;
+            console.log('✅ Firebase inicializado correctamente');
+        } catch (error) {
+            console.error('❌ Error inicializando Firebase:', error);
+            showError('Error inicializando Firebase', error.message);
+        }
+
+        function showError(title, details) {
+            document.getElementById('view-loading').classList.remove('active');
+            document.getElementById('view-error').classList.add('active');
+            document.querySelector('.error-state-title').textContent = title;
+            document.getElementById('error-message').textContent = details || 'Verifica tu configuración';
+        }
 
         // App Logic
         window.app = {
             init() {
+                if (!state.firebaseInitialized) return;
+
                 onAuthStateChanged(auth, (user) => {
                     state.user = user;
                     if (user) {
@@ -301,7 +338,7 @@
 
                 // Update nav
                 document.querySelectorAll('.nav-item').forEach((el, i) => {
-                    el.classList.toggle('active', (viewName === 'projects' && i === 0) || (viewName === 'reports' && i === 1) || (viewName === 'settings' && i === 2));
+                    el.classList.toggle('active', (viewName === 'projects' && i === 0));
                 });
             },
 
@@ -310,7 +347,8 @@
                     await signInWithPopup(auth, googleProvider);
                     this.showToast('¡Bienvenido!', 'success');
                 } catch (error) {
-                    this.showToast('Error: ' + error.message, 'error');
+                    console.error('Error login Google:', error);
+                    this.showToast('Error Google: ' + error.message, 'error');
                 }
             },
 
@@ -322,6 +360,7 @@
                     await signInWithEmailAndPassword(auth, email, password);
                     this.showToast('¡Bienvenido!', 'success');
                 } catch (error) {
+                    console.error('Error login email:', error);
                     this.showToast('Error: ' + error.message, 'error');
                 }
             },
@@ -334,6 +373,7 @@
                     await createUserWithEmailAndPassword(auth, email, password);
                     this.showToast('Cuenta creada!', 'success');
                 } catch (error) {
+                    console.error('Error registro:', error);
                     this.showToast('Error: ' + error.message, 'error');
                 }
             },
@@ -353,8 +393,34 @@
                     this.renderProjects();
                 } catch (error) {
                     console.error('Error loading projects:', error);
-                    this.showToast('Error al cargar proyectos', 'error');
+                    // Si es error de permisos, mostrar mensaje claro
+                    if (error.code === 'permission-denied') {
+                        this.showToast('Error: Configura las reglas de Firestore', 'error');
+                        this.showFirestoreHelp();
+                    } else {
+                        this.showToast('Error al cargar proyectos', 'error');
+                    }
                 }
+            },
+
+            showFirestoreHelp() {
+                // Mostrar ayuda para configurar Firestore
+                setTimeout(() => {
+                    alert('⚠️ ERROR DE PERMISOS DE FIRESTORE\n\n' +
+                          'Necesitas configurar las reglas de tu base de datos:\n\n' +
+                          '1. Ve a Firebase Console → Firestore Database\n' +
+                          '2. Click en "Reglas"\n' +
+                          '3. Cambia las reglas a:\n\n' +
+                          'rules_version = "2";\n' +
+                          'service cloud.firestore {\n' +
+                          '  match /databases/{database}/documents {\n' +
+                          '    match /{document=**} {\n' +
+                          '      allow read, write: if request.auth != null;\n' +
+                          '    }\n' +
+                          '  }\n' +
+                          '}\n\n' +
+                          '4. Click en "Publicar"');
+                }, 500);
             },
 
             renderProjects() {
@@ -372,7 +438,7 @@
 
                 container.innerHTML = state.projects.map(p => {
                     const progreso = p.progreso || 0;
-                    const totalItems = 285; // 19 actividades × 15 items
+                    const totalItems = 285;
                     const checkedItems = Math.round((progreso / 100) * totalItems);
 
                     return `
@@ -407,7 +473,6 @@
 
             closeModal() {
                 document.getElementById('modal-new-project').classList.remove('visible');
-                // Clear form
                 ['new-project-name', 'new-project-cliente', 'new-project-direccion', 'new-project-area', 'new-project-telefono'].forEach(id => {
                     document.getElementById(id).value = '';
                 });
@@ -437,7 +502,6 @@
                         createdAt: serverTimestamp()
                     });
 
-                    // Create empty checklist structure
                     await setDoc(doc(db, 'checklists', docRef.id), {
                         projectId: docRef.id,
                         checks: {},
@@ -451,7 +515,12 @@
                     this.loadProjects();
                 } catch (error) {
                     console.error('Error creating project:', error);
-                    this.showToast('Error al crear proyecto', 'error');
+                    if (error.code === 'permission-denied') {
+                        this.showToast('Error: Configura las reglas de Firestore', 'error');
+                        this.showFirestoreHelp();
+                    } else {
+                        this.showToast('Error al crear proyecto', 'error');
+                    }
                 }
             },
 
@@ -462,7 +531,6 @@
 
                     document.getElementById('checklist-project-name').textContent = state.currentProject.nombre;
 
-                    // Load checklist data
                     const checklistDoc = await getDoc(doc(db, 'checklists', projectId));
                     state.checklistData = checklistDoc.exists() ? checklistDoc.data() : { checks: {}, obs: {}, firmas: {} };
 
@@ -478,7 +546,6 @@
                 const container = document.getElementById('checklist-container');
                 const data = state.checklistData;
 
-                // Build checklist HTML (simplified version - full version would have all 4 blocks)
                 container.innerHTML = `
                     <div style="background: var(--s2); border: 1px solid var(--bd); border-radius: 10px; padding: 1rem; margin-bottom: 1rem;">
                         <h3 style="font-family: 'Josefin Sans'; font-weight: 600; margin-bottom: 0.5rem;">📋 Datos del Proyecto</h3>
@@ -491,8 +558,8 @@
                     </div>
 
                     <div style="text-align: center; padding: 2rem; color: var(--wd);">
-                        <p>🚧 Vista completa de checklist en desarrollo</p>
-                        <p style="font-size: 0.8rem; margin-top: 0.5rem;">Próximamente: los 4 bloques con 19 actividades</p>
+                        <p>🚧 Vista completa de checklist</p>
+                        <p style="font-size: 0.8rem; margin-top: 0.5rem;">En desarrollo...</p>
                     </div>
                 `;
             },
@@ -513,7 +580,9 @@
         };
 
         // Initialize app
-        window.app.init();
+        if (state.firebaseInitialized) {
+            window.app.init();
+        }
     </script>
 </body>
 </html>
