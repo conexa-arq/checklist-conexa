@@ -197,15 +197,6 @@
             </div>
             <div class="project-list" id="project-list"></div>
         </div>
-
-        <!-- Checklist View -->
-        <div id="view-checklist" class="view">
-            <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem; align-items: center;">
-                <button class="btn-secondary" onclick="app.showView('projects')" style="padding: 0.5rem 1rem; font-size: 0.8rem;">← Volver</button>
-                <h1 class="projects-title" id="checklist-project-name" style="font-size: 1.2rem; flex: 1;"></h1>
-            </div>
-            <div id="checklist-container"></div>
-        </div>
     </main>
 
     <!-- Bottom Navigation -->
@@ -367,14 +358,35 @@
 
             async registerEmail(event) {
                 event.preventDefault();
-                const email = document.getElementById('auth-email').value;
-                const password = document.getElementById('auth-password').value;
+                const email = document.getElementById('auth-email').value.trim();
+                const password = document.getElementById('auth-password').value.trim();
+
+                // Validaciones básicas
+                if (!email || !email.includes('@') || !email.includes('.')) {
+                    this.showToast('Email inválido. Ej: tu@email.com', 'error');
+                    return;
+                }
+                if (!password || password.length < 6) {
+                    this.showToast('Contraseña debe tener al menos 6 caracteres', 'error');
+                    return;
+                }
+
                 try {
                     await createUserWithEmailAndPassword(auth, email, password);
-                    this.showToast('Cuenta creada!', 'success');
+                    this.showToast('¡Cuenta creada!', 'success');
                 } catch (error) {
                     console.error('Error registro:', error);
-                    this.showToast('Error: ' + error.message, 'error');
+                    let mensaje = 'Error al crear cuenta';
+                    if (error.code === 'auth/email-already-in-use') {
+                        mensaje = 'Este email ya está registrado';
+                    } else if (error.code === 'auth/invalid-email') {
+                        mensaje = 'Email inválido';
+                    } else if (error.code === 'auth/weak-password') {
+                        mensaje = 'Contraseña muy débil (mínimo 6 caracteres)';
+                    } else {
+                        mensaje = error.message;
+                    }
+                    this.showToast(mensaje, 'error');
                 }
             },
 
@@ -525,43 +537,7 @@
             },
 
             async openChecklist(projectId) {
-                try {
-                    state.currentProject = state.projects.find(p => p.id === projectId);
-                    if (!state.currentProject) return;
-
-                    document.getElementById('checklist-project-name').textContent = state.currentProject.nombre;
-
-                    const checklistDoc = await getDoc(doc(db, 'checklists', projectId));
-                    state.checklistData = checklistDoc.exists() ? checklistDoc.data() : { checks: {}, obs: {}, firmas: {} };
-
-                    this.renderChecklist();
-                    this.showView('checklist');
-                } catch (error) {
-                    console.error('Error opening checklist:', error);
-                    this.showToast('Error al abrir checklist', 'error');
-                }
-            },
-
-            renderChecklist() {
-                const container = document.getElementById('checklist-container');
-                const data = state.checklistData;
-
-                container.innerHTML = `
-                    <div style="background: var(--s2); border: 1px solid var(--bd); border-radius: 10px; padding: 1rem; margin-bottom: 1rem;">
-                        <h3 style="font-family: 'Josefin Sans'; font-weight: 600; margin-bottom: 0.5rem;">📋 Datos del Proyecto</h3>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.75rem;">
-                            <div><small style="color: var(--wd);">Cliente</small><div style="color: var(--w);">${state.currentProject.cliente || '-'}</div></div>
-                            <div><small style="color: var(--wd);">Dirección</small><div style="color: var(--w);">${state.currentProject.direccion || '-'}</div></div>
-                            <div><small style="color: var(--wd);">Área</small><div style="color: var(--w);">${state.currentProject.area || '-'} m²</div></div>
-                            <div><small style="color: var(--wd);">Teléfono</small><div style="color: var(--w);">${state.currentProject.telefono || '-'}</div></div>
-                        </div>
-                    </div>
-
-                    <div style="text-align: center; padding: 2rem; color: var(--wd);">
-                        <p>🚧 Vista completa de checklist</p>
-                        <p style="font-size: 0.8rem; margin-top: 0.5rem;">En desarrollo...</p>
-                    </div>
-                `;
+                window.open(`checklist.html?id=${projectId}`, '_blank');
             },
 
             showToast(message, type = 'info') {

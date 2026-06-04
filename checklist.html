@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#070707">
+    <title>Checklist - CONEXA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@100;300;400;700&family=Figtree:wght@300;400;500;600;700&family=Syne+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bk: #070707; --s1: #0D0D0D; --s2: #141414; --s3: #1C1C1C; --s4: #252525;
+            --bd: rgba(255,255,255,0.07); --bd2: rgba(255,255,255,0.13);
+            --w: #F4F2ED; --wd: rgba(244,242,237,0.52); --wf: rgba(244,242,237,0.1);
+            --cu: #C4855A; --cu2: #8C5532; --cu3: rgba(196,133,90,0.15);
+            --green: #4ade80; --red: #ef4444;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bk); color: var(--w); font-family: 'Figtree', sans-serif; line-height: 1.6; padding-bottom: 80px; }
+
+        /* Header */
+        header { background: var(--s1); border-bottom: 1px solid var(--bd); padding: 0.75rem 1rem; position: sticky; top: 0; z-index: 100; }
+        .header-content { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+        .back-btn { background: var(--s3); border: 1px solid var(--bd); color: var(--w); padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 0.3rem; }
+        .project-title { font-family: 'Josefin Sans', sans-serif; font-weight: 600; font-size: 1rem; flex: 1; }
+        .save-status { display: flex; align-items: center; gap: 0.4rem; font-size: 0.7rem; color: var(--wd); }
+        .save-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--bd2); }
+        .save-dot.saved { background: var(--green); box-shadow: 0 0 6px var(--green); }
+        .save-dot.pending { background: var(--cu); animation: pulse 1s infinite; }
+        @keyframes pulse { 50% { opacity: 0.5; } }
+
+        /* Nav Tabs */
+        .nav-tabs { background: var(--s2); border-bottom: 1px solid var(--bd); overflow-x: auto; position: sticky; top: 52px; z-index: 99; }
+        .nav-tabs-inner { display: flex; min-width: max-content; }
+        .nav-tab { padding: 0.75rem 1.25rem; font-size: 0.75rem; font-family: 'Syne Mono', monospace; color: var(--wd); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; }
+        .nav-tab.active { color: var(--cu); border-bottom-color: var(--cu); background: var(--cu3); }
+
+        /* Main */
+        main { padding: 1rem; max-width: 900px; margin: 0 auto; }
+
+        /* Project Info Card */
+        .info-card { background: var(--s2); border: 1px solid var(--bd); border-radius: 10px; padding: 1rem; margin-bottom: 1rem; }
+        .info-card-title { font-family: 'Josefin Sans', sans-serif; font-weight: 600; font-size: 0.9rem; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.75rem; }
+        .info-item { display: flex; flex-direction: column; gap: 0.2rem; }
+        .info-label { font-size: 0.65rem; color: var(--wd); text-transform: uppercase; font-family: 'Syne Mono', monospace; }
+        .info-value { font-size: 0.85rem; color: var(--w); }
+
+        /* Bloque */
+        .bloque { background: var(--s2); border: 1px solid var(--bd); border-radius: 10px; padding: 1rem; margin-bottom: 1rem; }
+        .bloque-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--bd); }
+        .bloque-title { font-family: 'Josefin Sans', sans-serif; font-weight: 600; font-size: 1.1rem; }
+        .bloque-progress { display: flex; align-items: center; gap: 0.5rem; font-size: 0.7rem; color: var(--wd); }
+        .progress-bar { width: 80px; height: 5px; background: var(--s3); border-radius: 3px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--cu); transition: width 0.3s; }
+
+        /* Actividad */
+        .actividad { background: var(--s1); border: 1px solid var(--bd); border-radius: 8px; padding: 0.875rem; margin-bottom: 0.75rem; }
+        .actividad-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+        .actividad-title { font-family: 'Josefin Sans', sans-serif; font-weight: 600; font-size: 0.95rem; }
+        .actividad-num { font-size: 0.65rem; color: var(--cu); background: var(--cu3); padding: 0.2rem 0.5rem; border-radius: 4px; font-family: 'Syne Mono', monospace; }
+
+        /* Checklist Table */
+        .checklist-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+        .checklist-table th { text-align: left; padding: 0.5rem 0.3rem; font-size: 0.6rem; color: var(--wd); text-transform: uppercase; font-family: 'Syne Mono', monospace; border-bottom: 1px solid var(--bd); }
+        .checklist-table td { padding: 0.5rem 0.3rem; border-bottom: 1px solid var(--s3); vertical-align: middle; }
+        .checklist-table tr:last-child td { border-bottom: none; }
+        .item-num { color: var(--cu); font-family: 'Syne Mono', monospace; font-size: 0.7rem; width: 30px; }
+        .item-text { font-size: 0.8rem; }
+        .item-criteria { font-size: 0.7rem; color: var(--wd); display: block; margin-top: 0.15rem; }
+        .check-cell { text-align: center; width: 35px; }
+        .checkbox-custom { width: 24px; height: 24px; border: 2px solid var(--bd2); border-radius: 5px; display: inline-flex; justify-content: center; align-items: center; cursor: pointer; }
+        .checkbox-custom.checked { background: var(--cu); border-color: var(--cu); }
+        .checkbox-custom.checked::after { content: '✓'; color: var(--w); font-size: 14px; font-weight: bold; }
+        .obs-cell { min-width: 100px; }
+        .obs-input { width: 100%; background: var(--s3); border: 1px solid var(--bd); border-radius: 4px; padding: 0.4rem 0.5rem; color: var(--w); font-size: 0.75rem; }
+        .obs-input:focus { outline: none; border-color: var(--cu); }
+
+        /* Holds Section */
+        .holds-section { background: var(--s3); border-radius: 6px; padding: 0.75rem; margin-top: 0.75rem; }
+        .holds-title { font-size: 0.65rem; color: var(--cu); text-transform: uppercase; font-family: 'Syne Mono', monospace; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.3rem; }
+        .holds-title::before { content: '🔒'; }
+        .holds-table { width: 100%; border-collapse: collapse; font-size: 0.7rem; }
+        .holds-table th { text-align: left; padding: 0.4rem 0.3rem; font-size: 0.55rem; color: var(--wd); text-transform: uppercase; border-bottom: 1px solid var(--bd); }
+        .holds-table td { padding: 0.4rem 0.3rem; border-bottom: 1px solid var(--s4); }
+        .holds-table tr:last-child td { border-bottom: none; }
+        .hold-code { color: var(--cu); font-weight: 700; width: 40px; }
+        .firma-input { width: 100%; background: var(--s2); border: none; border-bottom: 1px solid var(--bd2); padding: 0.3rem 0.2rem; color: var(--w); font-size: 0.7rem; }
+        .firma-input:focus { outline: none; border-bottom-color: var(--cu); }
+
+        /* Floating Action Bar */
+        .floating-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--s1); border-top: 1px solid var(--bd); padding: 0.75rem 1rem; display: flex; gap: 0.5rem; justify-content: center; z-index: 100; }
+        .float-btn { flex: 1; max-width: 120px; padding: 0.6rem 1rem; border: none; border-radius: 6px; font-size: 0.75rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.3rem; }
+        .float-btn.primary { background: var(--cu); color: var(--w); }
+        .float-btn.secondary { background: var(--s3); color: var(--w); border: 1px solid var(--bd); }
+        .float-btn.danger { background: var(--s3); color: var(--red); border: 1px solid var(--red); }
+
+        /* Toast */
+        .toast { position: fixed; bottom: 70px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--s2); border: 1px solid var(--bd); border-radius: 8px; padding: 0.6rem 1.25rem; font-size: 0.75rem; z-index: 2000; opacity: 0; transition: all 0.3s; box-shadow: 0 4px 20px rgba(0,0,0,0.5); white-space: nowrap; }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+        .toast.success { border-color: var(--green); color: var(--green); }
+        .toast.error { border-color: var(--red); color: var(--red); }
+        .toast.info { border-color: var(--cu); color: var(--cu); }
+
+        /* Loading */
+        .loading-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 3000; display: flex; justify-content: center; align-items: center; }
+        .spinner { width: 40px; height: 40px; border: 3px solid var(--bd); border-top-color: var(--cu); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @media (max-width: 768px) {
+            .info-grid { grid-template-columns: 1fr 1fr; }
+            .checklist-table { font-size: 0.75rem; }
+            .item-text { font-size: 0.75rem; }
+            .item-criteria { font-size: 0.65rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <button class="back-btn" onclick="window.history.back()">← Volver</button>
+            <h1 class="project-title" id="project-title">Cargando...</h1>
+            <div class="save-status">
+                <span class="save-dot" id="save-dot"></span>
+                <span id="save-text">Guardado</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Nav Tabs -->
+    <div class="nav-tabs">
+        <div class="nav-tabs-inner">
+            <div class="nav-tab active" onclick="scrollToBloque(1)">Bloque 1</div>
+            <div class="nav-tab" onclick="scrollToBloque(2)">Bloque 2</div>
+            <div class="nav-tab" onclick="scrollToBloque(3)">Bloque 3</div>
+            <div class="nav-tab" onclick="scrollToBloque(4)">Bloque 4</div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main id="checklist-content">
+        <div class="loading-overlay" id="loading">
+            <div class="spinner"></div>
+        </div>
+    </main>
+
+    <!-- Floating Action Bar -->
+    <div class="floating-bar">
+        <button class="float-btn secondary" onclick="exportarDatos()">📤 Exportar</button>
+        <button class="float-btn primary" onclick="forzarGuardado()">💾 Guardar</button>
+        <button class="float-btn danger" onclick="limpiarChecklist()">🗑️ Borrar</button>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Firebase & App Logic -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyB1GvqogyJ9ft_VT6N1Rp4EMJVZbrYYcWA",
+            authDomain: "conexa---checklist.firebaseapp.com",
+            projectId: "conexa---checklist",
+            storageBucket: "conexa---checklist.firebasestorage.app",
+            messagingSenderId: "828271606324",
+            appId: "1:828271606324:web:d60590d82cb50afdd5e861",
+            measurementId: "G-XJCYKR3L3Y"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // State
+        let projectId = null;
+        let projectData = {};
+        let checklistData = { checks: {}, obs: {}, firmas: {} };
+        let isModified = false;
+        let saveTimeout = null;
+
+        // Get project ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        projectId = urlParams.get('id');
+
+        // Check auth
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = 'index.html';
+                return;
+            }
+            if (!projectId) {
+                showToast('No se encontró el proyecto', 'error');
+                return;
+            }
+            loadProject();
+        });
+
+        async function loadProject() {
+            try {
+                const projectDoc = await getDoc(doc(db, 'proyectos', projectId));
+                if (!projectDoc.exists()) {
+                    showToast('Proyecto no encontrado', 'error');
+                    return;
+                }
+                projectData = projectDoc.data();
+                document.getElementById('project-title').textContent = projectData.nombre || 'Proyecto';
+
+                // Load checklist data
+                const checklistDoc = await getDoc(doc(db, 'checklists', projectId));
+                if (checklistDoc.exists()) {
+                    checklistData = checklistDoc.data();
+                }
+
+                renderChecklist();
+                document.getElementById('loading').style.display = 'none';
+            } catch (error) {
+                console.error('Error loading project:', error);
+                showToast('Error al cargar proyecto', 'error');
+            }
+        }
+
+        function renderChecklist() {
+            const main = document.getElementById('checklist-content');
+            main.innerHTML = `
+                <!-- Project Info -->
+                <div class="info-card">
+                    <div class="info-card-title">📋 Información del Proyecto</div>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Cliente</span>
+                            <span class="info-value">${projectData.cliente || '-'}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Dirección</span>
+                            <span class="info-value">${projectData.direccion || '-'}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Área</span>
+                            <span class="info-value">${projectData.area || '-'} m²</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Teléfono</span>
+                            <span class="info-value">${projectData.telefono || '-'}</span>
+                        </div>
+                    </div>
+                </div>
+
+                ${renderBloque1()}
+                ${renderBloque2()}
+                ${renderBloque3()}
+                ${renderBloque4()}
+            `;
+
+            // Restore state
+            restoreState();
+        }
+
+        function renderBloque1() {
+            return `
+                <div class="bloque" id="bloque1">
+                    <div class="bloque-header">
+                        <div class="bloque-title">BLOQUE 1: ACTIVIDADES 1-5</div>
+                        <div class="bloque-progress">
+                            <span id="progreso-bloque1-text">0%</span>
+                            <div class="progress-bar"><div class="progress-fill" id="progreso-bloque1" style="width: 0%"></div></div>
+                        </div>
+                    </div>
+
+                    ${renderActividad(1, 'MOVIMIENTO DE TIERRA', [
+                        ['Replanteo', 'Ejes y niveles según planos'],
+                        ['Nivelación', 'Compactación del terreno'],
+                        ['Excavación', 'Profundidad según diseño'],
+                        ['Retiro de escombros', 'Limpieza del área'],
+                        ['Protección de linderos', 'Estabilización de taludes']
+                    ], 1)}
+
+                    ${renderActividad(2, 'MAMPOSTERÍA', [
+                        ['Trazo de muros', 'Según planos arquitectónicos'],
+                        ['Primera hilada', 'Nivelada y plomo'],
+                        ['Refuerzo vertical', 'Cada 80cm o según diseño'],
+                        ['Cadena de amarre', 'Anclada a columnas'],
+                        ['Limpieza de juntas', 'Antes de pañete']
+                    ], 2)}
+
+                    ${renderActividad(3, 'CIMIENTOS', [
+                        ['Excavación de cimientos', 'Profundidad y ancho según cálculo'],
+                        ['Plantilla de concreto pobre', '5-10cm de espesor'],
+                        ['Refuerzo instalado', 'Según planos estructurales'],
+                        ['Vaciado de concreto', 'F\'c especificado'],
+                        ['Curado', '7 días mínimo']
+                    ], 3)}
+
+                    ${renderActividad(4, 'CONCRETOS', [
+                        ['Encofrado', 'Nivel, plomo, limpio'],
+                        ['Refuerzo', 'Según planos, separadores'],
+                        ['Vaciado', 'Vibrado, sin huecos'],
+                        ['Desencofrado', 'Sin daños en bordes'],
+                        ['Curado', '7 días mínimo']
+                    ], 4)}
+
+                    ${renderActividad(5, 'PAÑETES', [
+                        ['Preparación de superficie', 'Limpia, humedecida'],
+                        ['Maestros instalados', 'Plomo, nivel, alineados'],
+                        ['Primera capa', 'Adherencia correcta'],
+                        ['Segunda capa', 'Espesor uniforme'],
+                        ['Acabado', 'Liso, sin grietas']
+                    ], 5)}
+                </div>
+            `;
+        }
+
+        function renderBloque2() {
+            return `
+                <div class="bloque" id="bloque2">
+                    <div class="bloque-header">
+                        <div class="bloque-title">BLOQUE 2: ACTIVIDADES 6-10</div>
+                        <div class="bloque-progress">
+                            <span id="progreso-bloque2-text">0%</span>
+                            <div class="progress-bar"><div class="progress-fill" id="progreso-bloque2" style="width: 0%"></div></div>
+                        </div>
+                    </div>
+
+                    ${renderActividad(6, 'ESTUCOS', [
+                        ['Preparación de superficie', 'Limpia, sin polvo'],
+                        ['Primera capa', 'Adherencia correcta'],
+                        ['Segunda capa', 'Espesor uniforme'],
+                        ['Acabado', 'Liso, sin grietas'],
+                        ['Protección', 'Sin daños posteriores']
+                    ], 6)}
+
+                    ${renderActividad(7, 'CIELOS RASOS (RAS)', [
+                        ['Trazo de niveles', 'En todo el perímetro'],
+                        ['Estructura instalada', 'Fija, nivelada'],
+                        ['Placas instaladas', 'Sin huecos, alineadas'],
+                        ['Masilla en juntas', 'Lija, sin marcas'],
+                        ['Acabado', 'Listo para pintura']
+                    ], 7)}
+
+                    ${renderActividad(8, 'MORTERO DE NIVELACIÓN', [
+                        ['Limpieza de superficie', 'Sin polvo, grasa'],
+                        ['Imprimación', 'Aplicada, secada'],
+                        ['Mortero aplicado', 'Espesor uniforme'],
+                        ['Nivelación', 'Verificada'],
+                        ['Curado', 'Según especificaciones']
+                    ], 8)}
+
+                    ${renderActividad(9, 'CIELO RASO EN DRYWALL', [
+                        ['Estructura metálica', 'Fija, nivelada'],
+                        ['Placas de yeso', 'Instaladas, sin daños'],
+                        ['Masilla en juntas', 'Lija, uniforme'],
+                        ['Cintas instaladas', 'Sin burbujas'],
+                        ['Acabado', 'Listo para pintura']
+                    ], 9)}
+
+                    ${renderActividad(10, 'PINTURA PRIMERA MANO', [
+                        ['Superficie preparada', 'Limpia, seca, lijada'],
+                        ['Imprimación', 'Aplicada uniformemente'],
+                        ['Corte de bordes', 'Repasado'],
+                        ['Primera mano', 'Rodillo, uniforme'],
+                        ['Secado', '24 horas mínimo']
+                    ], 10)}
+                </div>
+            `;
+        }
+
+        function renderBloque3() {
+            return `
+                <div class="bloque" id="bloque3">
+                    <div class="bloque-header">
+                        <div class="bloque-title">BLOQUE 3: ACTIVIDADES 11-15</div>
+                        <div class="bloque-progress">
+                            <span id="progreso-bloque3-text">0%</span>
+                            <div class="progress-bar"><div class="progress-fill" id="progreso-bloque3" style="width: 0%"></div></div>
+                        </div>
+                    </div>
+
+                    ${renderActividad(11, 'ENCHAPE', [
+                        ['Impermeabilización', 'Duchas y baños, 2-3 manos'],
+                        ['Prueba de estanqueidad', '24 horas, sin fugas'],
+                        ['Pendientes', '1-2% hacia desagüe'],
+                        ['Trazado de niveles', 'Línea en todo el perímetro'],
+                        ['Distribución de piezas', 'Sin cortes <50% en bordes']
+                    ], 11)}
+
+                    ${renderActividad(12, 'PINTURA SEGUNDA MANO', [
+                        ['Primera mano seca', 'Mínimo 24 horas'],
+                        ['Lijado ligero', 'Lija 220-320'],
+                        ['Limpieza de polvo', 'Trapo húmedo'],
+                        ['Segunda mano', 'Rodillo, uniforme'],
+                        ['Secado', '4-6 horas al tacto']
+                    ], 12)}
+
+                    ${renderActividad(13, 'CARPINTERÍAS', [
+                        ['Vanos verificados', 'Medidas correctas, a plomo'],
+                        ['Marcos instalados', 'A plomo, nivelados, fijados'],
+                        ['Puertas instaladas', 'Bisagras fijas, holgura 3-4mm'],
+                        ['Puertas funcionan', 'Sin rozar'],
+                        ['Cerraduras y manijas', 'Instaladas, funcionan']
+                    ], 13)}
+
+                    ${renderActividad(14, 'INSTALACIÓN DE MESONES', [
+                        ['Área verificada', 'Medidas correctas'],
+                        ['Gabinetes instalados', 'Nivelados, fijos'],
+                        ['Mesón colocado', 'Completamente apoyado'],
+                        ['Nivelación', 'Horizontal en todo sentido'],
+                        ['Lavaplatos instalado', 'Sellado, sin fugas']
+                    ], 14)}
+
+                    ${renderActividad(15, 'PINTURA TERCERA MANO', [
+                        ['Segunda mano seca', '24-48 horas'],
+                        ['Lijado final', 'Lija 400-600, suave'],
+                        ['Limpieza exhaustiva', 'Sin polvo'],
+                        ['Tercera mano', 'Capa delgada, uniforme'],
+                        ['Verificación final', 'Luz rasante, sin defectos']
+                    ], 15)}
+                </div>
+            `;
+        }
+
+        function renderBloque4() {
+            return `
+                <div class="bloque" id="bloque4">
+                    <div class="bloque-header">
+                        <div class="bloque-title">BLOQUE 4: ACTIVIDADES 16-19</div>
+                        <div class="bloque-progress">
+                            <span id="progreso-bloque4-text">0%</span>
+                            <div class="progress-bar"><div class="progress-fill" id="progreso-bloque4" style="width: 0%"></div></div>
+                        </div>
+                    </div>
+
+                    ${renderActividad(16, 'BUITRÓN', [
+                        ['Ubicación verificada', 'Según planos'],
+                        ['Estructura armada', 'Varillas, separadores'],
+                        ['Concreto vaciado', 'F\'c especificado'],
+                        ['Tapa instalada', 'Ajustada, nivelada'],
+                        ['Accesibilidad', 'Sin obstáculos']
+                    ], 16)}
+
+                    ${renderActividad(17, 'APARATOS Y ACCESORIOS', [
+                        ['Sanitarios instalados', 'Fijos, nivelados, sellados'],
+                        ['Prueba de agua', 'Sin fugas'],
+                        ['Grifería instalada', 'Fija, sin fugas'],
+                        ['Accesorios de baño', 'Toalleros, papelero, jabonera'],
+                        ['Espejos instalados', 'Fijos, nivelados']
+                    ], 17)}
+
+                    ${renderActividad(18, 'DETALLADO DE NOVEDADES', [
+                        ['Recorrido completo', 'Todos los espacios'],
+                        ['Novedades identificadas', 'Lista con fotos'],
+                        ['Novedades clasificadas', 'Por prioridad'],
+                        ['Informe generado', 'Documento formal'],
+                        ['Plan de acción', 'Cronograma, recursos']
+                    ], 18)}
+
+                    ${renderActividad(19, 'ASEO GENERAL', [
+                        ['Escombros retirados', 'Todos los espacios'],
+                        ['Protecciones retiradas', 'Pisos, muros, marcos'],
+                        ['Pisos lavados', 'Sin manchas, residuos'],
+                        ['Vidrios limpiados', 'Sin manchas, marcas'],
+                        ['Inspección final', 'Inmaculado, listo para entrega']
+                    ], 19)}
+                </div>
+            `;
+        }
+
+        function renderActividad(num, titulo, items, actNum) {
+            const rows = items.map((item, idx) => {
+                const checkId = `${actNum}-${idx + 1}`;
+                const obsId = `${actNum}-${idx + 1}-obs`;
+                return `
+                    <tr>
+                        <td class="item-num">${String(idx + 1).padStart(2, '0')}</td>
+                        <td>
+                            <span class="item-text">${item[0]}</span>
+                            <span class="item-criteria">${item[1]}</span>
+                        </td>
+                        <td class="check-cell">
+                            <span class="checkbox-custom" onclick="toggleCheck('${checkId}', this)"></span>
+                        </td>
+                        <td class="obs-cell">
+                            <input type="text" class="obs-input" placeholder="Obs" data-obs="${obsId}" oninput="guardarObs('${obsId}', this.value)">
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            return `
+                <div class="actividad" data-actividad="${actNum}">
+                    <div class="actividad-header">
+                        <h3 class="actividad-titulo">${titulo}</h3>
+                        <span class="actividad-num">ACT ${actNum}</span>
+                    </div>
+                    <table class="checklist-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 30px;">#</th>
+                                <th>Ítem / Criterio</th>
+                                <th style="width: 40px;">✓</th>
+                                <th style="width: 100px;">Obs</th>
+                            </tr>
+                        </thead>
+                        <tbody>${rows}</tbody>
+                    </table>
+                    <div class="holds-section">
+                        <div class="holds-title">STAKEHOLDER HOLDS</div>
+                        <table class="holds-table">
+                            <thead>
+                                <tr>
+                                    <th class="hold-code">Hold</th>
+                                    <th>Punto de Control</th>
+                                    <th style="width: 100px;">Firma</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="hold-code">H1</td>
+                                    <td>Verificación inicial</td>
+                                    <td><input type="text" class="firma-input" placeholder="Firma" data-firma="${actNum}-h1" oninput="guardarFirma('${actNum}-h1', this.value)"></td>
+                                </tr>
+                                <tr>
+                                    <td class="hold-code">H2</td>
+                                    <td>Verificación durante</td>
+                                    <td><input type="text" class="firma-input" placeholder="Firma" data-firma="${actNum}-h2" oninput="guardarFirma('${actNum}-h2', this.value)"></td>
+                                </tr>
+                                <tr>
+                                    <td class="hold-code">H3</td>
+                                    <td>Verificación final</td>
+                                    <td><input type="text" class="firma-input" placeholder="Firma" data-firma="${actNum}-h3" oninput="guardarFirma('${actNum}-h3', this.value)"></td>
+                                </tr>
+                                <tr>
+                                    <td class="hold-code">H4</td>
+                                    <td>Aprobación</td>
+                                    <td><input type="text" class="firma-input" placeholder="Firma" data-firma="${actNum}-h4" oninput="guardarFirma('${actNum}-h4', this.value)"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function restoreState() {
+            // Restore checks
+            Object.entries(checklistData.checks || {}).forEach(([id, checked]) => {
+                if (checked) {
+                    const el = document.querySelector(`.checkbox-custom[onclick*="'${id}'"]`);
+                    if (el) el.classList.add('checked');
+                }
+            });
+
+            // Restore observations
+            Object.entries(checklistData.obs || {}).forEach(([id, value]) => {
+                const input = document.querySelector(`.obs-input[data-obs="${id}"]`);
+                if (input) input.value = value || '';
+            });
+
+            // Restore firmas
+            Object.entries(checklistData.firmas || {}).forEach(([id, value]) => {
+                const input = document.querySelector(`.firma-input[data-firma="${id}"]`);
+                if (input) input.value = value || '';
+            });
+
+            // Update progress
+            updateAllProgress();
+        }
+
+        window.toggleCheck = (id, el) => {
+            el.classList.toggle('checked');
+            checklistData.checks[id] = el.classList.contains('checked');
+            markModified();
+            updateProgress(el);
+            autoSave();
+        };
+
+        window.guardarObs = (id, value) => {
+            checklistData.obs[id] = value;
+            markModified();
+            autoSave();
+        };
+
+        window.guardarFirma = (id, value) => {
+            checklistData.firmas[id] = value;
+            markModified();
+            autoSave();
+        };
+
+        function markModified() {
+            isModified = true;
+            document.getElementById('save-dot').className = 'save-dot pending';
+            document.getElementById('save-text').textContent = 'Guardando...';
+        }
+
+        function autoSave() {
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(() => {
+                saveToFirebase();
+            }, 1000);
+        }
+
+        window.forzarGuardado = async () => {
+            await saveToFirebase();
+            showToast('Datos guardados', 'success');
+        };
+
+        async function saveToFirebase() {
+            try {
+                await updateDoc(doc(db, 'checklists', projectId), {
+                    checks: checklistData.checks,
+                    obs: checklistData.obs,
+                    firmas: checklistData.firmas,
+                    updatedAt: serverTimestamp()
+                });
+
+                // Update project progress
+                const totalChecks = document.querySelectorAll('.checkbox-custom').length;
+                const checkedCount = document.querySelectorAll('.checkbox-custom.checked').length;
+                const progreso = totalChecks > 0 ? Math.round((checkedCount / totalChecks) * 100) : 0;
+
+                await updateDoc(doc(db, 'proyectos', projectId), {
+                    progreso,
+                    updatedAt: serverTimestamp()
+                });
+
+                isModified = false;
+                document.getElementById('save-dot').className = 'save-dot saved';
+                document.getElementById('save-text').textContent = 'Guardado';
+            } catch (error) {
+                console.error('Error saving:', error);
+                showToast('Error al guardar', 'error');
+            }
+        }
+
+        function updateProgress(el) {
+            const bloque = el.closest('.bloque');
+            if (!bloque) return;
+            const bloqueId = bloque.id;
+            const totalChecks = bloque.querySelectorAll('.checkbox-custom').length;
+            const checkedCount = bloque.querySelectorAll('.checkbox-custom.checked').length;
+            const porcentaje = totalChecks > 0 ? Math.round((checkedCount / totalChecks) * 100) : 0;
+
+            document.getElementById(`progreso-${bloqueId}`).style.width = porcentaje + '%';
+            document.getElementById(`${bloqueId}-text`).textContent = porcentaje + '%';
+        }
+
+        function updateAllProgress() {
+            ['bloque1', 'bloque2', 'bloque3', 'bloque4'].forEach(id => {
+                const bloque = document.getElementById(id);
+                if (bloque) {
+                    const totalChecks = bloque.querySelectorAll('.checkbox-custom').length;
+                    const checkedCount = bloque.querySelectorAll('.checkbox-custom.checked').length;
+                    const porcentaje = totalChecks > 0 ? Math.round((checkedCount / totalChecks) * 100) : 0;
+                    document.getElementById(`progreso-${id}`).style.width = porcentaje + '%';
+                    document.getElementById(`${id}-text`).textContent = porcentaje + '%';
+                }
+            });
+        }
+
+        window.scrollToBloque = (num) => {
+            const bloque = document.getElementById(`bloque${num}`);
+            if (bloque) {
+                bloque.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Update active tab
+                document.querySelectorAll('.nav-tab').forEach((tab, idx) => {
+                    tab.classList.toggle('active', idx + 1 === num);
+                });
+            }
+        };
+
+        window.exportarDatos = () => {
+            const data = {
+                proyecto: projectData,
+                checklist: checklistData,
+                fecha: new Date().toISOString()
+            };
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `checklist-${projectData.nombre?.replace(/[^a-z0-9]/gi, '_') || 'proyecto'}-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('Exportado', 'success');
+        };
+
+        window.limpiarChecklist = async () => {
+            if (!confirm('¿Borrar TODOS los datos de esta checklist? Esta acción no se puede deshacer.')) return;
+
+            try {
+                await updateDoc(doc(db, 'checklists', projectId), {
+                    checks: {},
+                    obs: {},
+                    firmas: {},
+                    updatedAt: serverTimestamp()
+                });
+
+                await updateDoc(doc(db, 'proyectos', projectId), {
+                    progreso: 0,
+                    updatedAt: serverTimestamp()
+                });
+
+                location.reload();
+            } catch (error) {
+                console.error('Error clearing:', error);
+                showToast('Error al borrar', 'error');
+            }
+        };
+
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+    </script>
+</body>
+</html>
